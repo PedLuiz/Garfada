@@ -9,7 +9,7 @@ Isaac Reyes Alves de Abreu - Full Stack
 Pedro Luiz Silva - Full Stack
 
 ## Tecnologias e Agentes
-React + Node.js + PostgreSQL
+React + Node.js + PostgreSQL 
 Codex
 
 ## Histórias de usuários
