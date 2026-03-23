@@ -4,13 +4,13 @@ Repositório dedicado para o sistema Garfada, desenvolvido para o trabalho prát
 O Garfada é uma plataforma de catálogo e avaliação de restaurantes projetada para centralizar e socializar a experiência gastronômica. Inspirado em grandes sistemas de avaliação de filmes (IMDb, Rotten Tomatoes, Letterboxd etc), o sistema permite que usuários registrem suas visitas, críticas, atribuam notas e organizem listas de desejos personalizadas. Através de filtros dinâmicos e perfis sociais, a aplicação conecta o paladar da comunidade com detalhes reais do cardápio, preços e ambientes.
 
 ## Membros
-Daniel da Cunha Costa - Full Stack
-Isaac Reyes Alves de Abreu - Full Stack
-Pedro Luiz Silva - Full Stack
+- Daniel da Cunha Costa - Full Stack
+- Isaac Reyes Alves de Abreu - Full Stack
+- Pedro Luiz Silva - Full Stack
 
 ## Tecnologias e Agentes
-React + Node.js + PostgreSQL 
-Codex
+- React + Node.js + PostgreSQL 
+- Codex
 
 ## Histórias de usuários
 - Como usuário do sistema, gostaria de filtrar os restaurantes por tipo de cozinha, faixa de preço, para que eu encontre rapidamente um lugar que combine com meu desejo e condição no momento.
