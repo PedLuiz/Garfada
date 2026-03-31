@@ -12,6 +12,21 @@ O Garfada é uma plataforma de catálogo e avaliação de restaurantes projetada
 - React + Node.js + PostgreSQL 
 - Codex
 
+## Setup Base (Template Inicial)
+1. Crie o arquivo de ambiente:
+   - `cp .env.example .env`
+2. Suba a stack:
+   - `docker compose up --build`
+3. Enderecos locais:
+   - Frontend: `http://localhost:5173`
+   - Backend (health): `http://localhost:3001/health`
+
+Arquivos de fundacao:
+- `docker-compose.yml` para orquestracao da stack
+- `db/init.sql` como placeholder de inicializacao do Postgres
+- `backend/src/server.js` e `backend/src/db.js` como template da API
+- `frontend/src/App.jsx` como template inicial do frontend
+
 ## Histórias de usuários
 - Como usuário do sistema, gostaria de filtrar os restaurantes por tipo de cozinha, faixa de preço, para que eu encontre rapidamente um lugar que combine com meu desejo e condição no momento.
 - Como cliente, eu quero poder visualizar as fotos dos ambientes e o cardápio do restaurante, para avaliar se o local é adequado para ocasião.
@@ -21,4 +36,3 @@ O Garfada é uma plataforma de catálogo e avaliação de restaurantes projetada
 - Como usuário, eu quero poder seguir amigos ou críticos locais, que também utilizam o sistema, para poder acompanhar as avaliações de pessoas em cujo paladar eu confio.
 - Como usuário cadastrado, eu quero poder editar minha bio e foto de perfil para que as outras pessoas na rede possam me identificar e conhecer meu estilo de culinária favorito.
 - Como usuário gostaria de ver as médias estatísticas (avaliações, comentários, visitas) dos restaurantes no catálogo para poder auxiliar na minha escolha.
-

@@ -1,0 +1,3 @@
+-- Template inicial de banco.
+-- Este arquivo existe para o Docker Compose montar corretamente.
+-- TODO: definir schema e seeds reais da aplicacao.
