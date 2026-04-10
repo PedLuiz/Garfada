@@ -1,41 +1,60 @@
-import {
-  getRestaurantById,
-  getVisited,
-  getWishlist,
-  listRestaurants,
-  toggleVisited,
-  toggleWishlist,
-} from '../mocks/mockDb'
-import { mockRequest } from './apiClient'
+import { apiClient, ApiError } from './apiClient'
+
+function toQueryString(filters = {}) {
+  const params = new URLSearchParams()
+
+  for (const [key, value] of Object.entries(filters)) {
+    if (value === undefined || value === null) {
+      continue
+    }
+
+    const stringValue = String(value).trim()
+
+    if (!stringValue) {
+      continue
+    }
+
+    params.set(key, stringValue)
+  }
+
+  const query = params.toString()
+  return query ? `?${query}` : ''
+}
+
+function isConflictError(error) {
+  return error instanceof ApiError && error.status === 409
+}
 
 export const restaurantService = {
-  list: (filters = {}) =>
-    mockRequest(() => {
-      return listRestaurants(filters)
-    }),
+  list: (filters = {}) => apiClient.get(`/api/restaurants${toQueryString(filters)}`),
 
-  getById: (id) =>
-    mockRequest(() => {
-      return getRestaurantById(id)
-    }),
+  getById: (id) => apiClient.get(`/api/restaurants/${id}`),
 
-  getWishlist: () =>
-    mockRequest(() => {
-      return getWishlist()
-    }),
+  getWishlist: () => apiClient.get('/api/me/wishlist'),
 
-  toggleWishlist: (restaurantId) =>
-    mockRequest(() => {
-      return toggleWishlist(restaurantId)
-    }, { delayMs: 250 }),
+  toggleWishlist: async (restaurantId) => {
+    try {
+      return await apiClient.post(`/api/restaurants/${restaurantId}/wishlist`)
+    } catch (error) {
+      if (isConflictError(error)) {
+        return apiClient.delete(`/api/restaurants/${restaurantId}/wishlist`)
+      }
 
-  getVisited: () =>
-    mockRequest(() => {
-      return getVisited()
-    }),
+      throw error
+    }
+  },
 
-  toggleVisited: (restaurantId, payload = {}) =>
-    mockRequest(() => {
-      return toggleVisited(restaurantId, payload)
-    }, { delayMs: 250 }),
+  getVisited: () => apiClient.get('/api/me/visited'),
+
+  toggleVisited: async (restaurantId, payload = {}) => {
+    try {
+      return await apiClient.post(`/api/restaurants/${restaurantId}/visited`, payload)
+    } catch (error) {
+      if (isConflictError(error)) {
+        return apiClient.delete(`/api/restaurants/${restaurantId}/visited`)
+      }
+
+      throw error
+    }
+  },
 }

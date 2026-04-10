@@ -1,23 +1,18 @@
-import { createOrUpdateReview, listReviewsByRestaurant } from '../mocks/mockDb'
-import { mockRequest } from './apiClient'
+import { apiClient } from './apiClient'
 
 export const reviewService = {
-  listByRestaurant: (restaurantId) =>
-    mockRequest(() => {
-      return listReviewsByRestaurant(restaurantId)
-    }),
+  listByRestaurant: (restaurantId) => apiClient.get(`/api/restaurants/${restaurantId}/reviews`),
 
-  create: (restaurantId, payload) =>
-    mockRequest(() => {
-      const rating = Number(payload.rating)
+  create: async (restaurantId, payload) => {
+    const rating = Number(payload.rating)
 
-      if (Number.isNaN(rating) || rating < 1 || rating > 5) {
-        throw new Error('A nota deve estar entre 1 e 5 estrelas.')
-      }
+    if (Number.isNaN(rating) || rating < 1 || rating > 5) {
+      throw new Error('A nota deve estar entre 1 e 5 estrelas.')
+    }
 
-      return createOrUpdateReview(restaurantId, {
-        rating,
-        comment: payload.comment ?? '',
-      })
-    }, { delayMs: 280 }),
+    return apiClient.post(`/api/restaurants/${restaurantId}/reviews`, {
+      rating,
+      comment: payload.comment ?? '',
+    })
+  },
 }

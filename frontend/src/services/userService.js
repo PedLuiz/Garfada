@@ -1,29 +1,13 @@
-import { getMe, getProfile, getUserCollections, updateMe } from '../mocks/mockDb'
-import { mockRequest } from './apiClient'
+import { apiClient } from './apiClient'
 
 export const userService = {
-  getMe: () =>
-    mockRequest(() => {
-      return getMe()
-    }),
+  getMe: () => apiClient.get('/api/me'),
 
-  updateProfile: (payload) =>
-    mockRequest(() => {
-      return updateMe(payload)
-    }, { delayMs: 300 }),
+  updateProfile: (payload) => apiClient.put('/api/me', payload),
 
-  getProfile: (userId) =>
-    mockRequest(() => {
-      return getProfile(userId)
-    }),
+  getProfile: (userId) => apiClient.get(`/api/users/${userId}`),
 
-  getMyCollections: async () => {
-    const me = await userService.getMe()
-    return mockRequest(() => getUserCollections(me.id))
-  },
+  getMyCollections: () => apiClient.get('/api/me/collections'),
 
-  getCollectionsByUser: (userId) =>
-    mockRequest(() => {
-      return getUserCollections(userId)
-    }),
+  getCollectionsByUser: (userId) => apiClient.get(`/api/users/${userId}/collections`),
 }
