@@ -1,34 +1,47 @@
 # Garfada
 
-Repositório dedicado ao sistema Garfada, plataforma de catálogo e avaliação social de restaurantes.
+Repositório do Garfada com frontend React + backend Node/Express integrado ao PostgreSQL.
 
-## Sobre esta entrega
-Esta entrega implementa **apenas o frontend** do Garfada, com navegação completa, telas funcionais, mocks locais e contratos de integração para backend futuro.
+## Stack
+- Frontend: React + Vite
+- Backend: Node.js + Express + pg
+- Banco: PostgreSQL (schema e seeds em `db/init.sql`)
 
-## Tecnologias
-- React
-- Tailwind CSS
-- React Router
-- Docker
-
-## Subindo o frontend com Docker
+## Subindo tudo com Docker
 Na raiz do projeto:
 
 ```bash
 docker compose up --build
 ```
 
-Acesse:
+Serviços:
 - Frontend: `http://localhost:5173`
+- Backend: `http://localhost:3001`
+- PostgreSQL: `localhost:5432`
 
-## Documentação do frontend
-Veja:
-- `frontend/README.md`
+O schema é carregado automaticamente a partir de `db/init.sql` na primeira subida do banco.
+
+## Variáveis de ambiente
+Copie `.env.example` para `.env` e ajuste se necessário.
+
+Principais variáveis:
+- `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, `PGPASSWORD`
+- `JWT_SECRET`, `JWT_EXPIRES_IN`
+- `PORT`
+- `VITE_API_URL`
+
+## Credenciais seed para login
+Os usuários seedados usam a senha:
+
+```text
+garfada123
+```
+
+Exemplo:
+- email: `pedro@garfada.app`
+- username: `pedrins`
+- senha: `garfada123`
+
+## Endpoints do frontend
+Contratos esperados no frontend:
 - `frontend/ENDPOINTS.md`
-
-## Escopo desta etapa
-- frontend React/Tailwind completo
-- sem backend real
-- sem banco real
-- sem autenticação real
-- sem persistência real
