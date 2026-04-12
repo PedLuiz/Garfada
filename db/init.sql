@@ -250,4 +250,166 @@ LEFT JOIN (
   GROUP BY follower_user_id
 ) fg ON fg.user_id = u.id;
 
+-- Seeds iniciais alinhados aos mocks do frontend.
+INSERT INTO users (id, name, email, username, password_hash, avatar_url, bio) VALUES
+  ('u1', 'Pedro Salles', 'pedro@garfada.app', 'pedrins', 'pbkdf2_sha256$120000$Z2FyZmFkYS11MS1zYWx0$thLcIIagd67MglsLHuxFgjZyDd0oRVgygzqBhG206nc', 'https://i.pravatar.cc/160?img=13', 'Café forte, comida mineira e descobertas de bairro.'),
+  ('u2', 'Camila Prado', 'camila@garfada.app', 'camilaprado', 'pbkdf2_sha256$120000$Z2FyZmFkYS11Mi1zYWx0$TpV3igYaOPFbQOWHRfYJ6Mxb01LKh0kVtj8HmEMFXeI', 'https://i.pravatar.cc/160?img=32', 'Amo menus degustação e sobremesas autorais.'),
+  ('u3', 'João Nogueira', 'joao@garfada.app', 'joaonog', 'pbkdf2_sha256$120000$Z2FyZmFkYS11My1zYWx0$-oll5jE33roMUzLNQ2HEZ21_sobmM2-4nDLCsllkIpg', 'https://i.pravatar.cc/160?img=12', 'Roteiro de botecos, churrascos e bons hambúrgueres.'),
+  ('u4', 'Lívia Azevedo', 'livia@garfada.app', 'livaz', 'pbkdf2_sha256$120000$Z2FyZmFkYS11NC1zYWx0$aVqmPtycLtDufUhxbl-pSrVe-YcrNz0RbsAAjhv3DUA', 'https://i.pravatar.cc/160?img=44', 'Vegetariana e pesquisadora de restaurantes sustentáveis.'),
+  ('u5', 'Rafael Gomes', 'rafael@garfada.app', 'rafagourmet', 'pbkdf2_sha256$120000$Z2FyZmFkYS11NS1zYWx0$5IezI8UIencKvJkUXT7XbkijatGyEZ3ogdpnCwMfJN4', 'https://i.pravatar.cc/160?img=59', 'Busco pratos sazonais e cozinha técnica.');
+
+INSERT INTO cuisines (name) VALUES
+  ('Brasileira'),
+  ('Japonesa'),
+  ('Italiana'),
+  ('Peruana'),
+  ('Churrasco'),
+  ('Vegetariana'),
+  ('Indiana'),
+  ('Francesa');
+
+INSERT INTO user_favorite_cuisines (user_id, cuisine_id)
+SELECT
+  uf.user_id,
+  c.id
+FROM (
+  VALUES
+    ('u1', 'Brasileira'),
+    ('u1', 'Italiana'),
+    ('u1', 'Japonesa'),
+    ('u2', 'Francesa'),
+    ('u2', 'Peruana'),
+    ('u3', 'Churrasco'),
+    ('u3', 'Brasileira'),
+    ('u3', 'Indiana'),
+    ('u4', 'Vegetariana'),
+    ('u4', 'Indiana'),
+    ('u5', 'Japonesa'),
+    ('u5', 'Francesa'),
+    ('u5', 'Italiana')
+) AS uf(user_id, cuisine_name)
+JOIN cuisines c ON c.name = uf.cuisine_name;
+
+INSERT INTO restaurants (id, name, cuisine_id, price_range, description, address)
+SELECT
+  r.id,
+  r.name,
+  c.id,
+  r.price_range,
+  r.description,
+  r.address
+FROM (
+  VALUES
+    ('r1', 'Casa Mineira Contemporânea', 'Brasileira', '$$', 'Clássicos mineiros com releitura moderna e ingredientes locais.', 'Rua dos Sabores, 214 - Savassi, Belo Horizonte'),
+    ('r2', 'Sakura Izakaya', 'Japonesa', '$$$', 'Combinados sazonais, cozinha quente e balcão omakase.', 'Av. do Oriente, 98 - Funcionários, Belo Horizonte'),
+    ('r3', 'Forno da Vila', 'Italiana', '$$', 'Massas frescas e pizzas napolitanas fermentadas naturalmente.', 'Alameda da Vila, 77 - Lourdes, Belo Horizonte'),
+    ('r4', 'Maré Alta Cevicheria', 'Peruana', '$$$', 'Ceviches autorais, frutos do mar frescos e coquetelaria cítrica.', 'Rua Atlântica, 301 - Belvedere, Belo Horizonte'),
+    ('r5', 'Brasa & Pimenta BBQ', 'Churrasco', '$$', 'Carnes defumadas de longa cocção e acompanhamentos brasileiros.', 'Rua da Brasa, 451 - Prado, Belo Horizonte'),
+    ('r6', 'Verde Raiz Bistrô', 'Vegetariana', '$$', 'Pratos vegetais sazonais e fermentações artesanais.', 'Rua dos Ipês, 65 - Floresta, Belo Horizonte'),
+    ('r7', 'Rota do Curry', 'Indiana', '$$', 'Curries regionais, forno tandoor e especiarias moídas na casa.', 'Av. das Especiarias, 142 - Santa Efigênia, Belo Horizonte'),
+    ('r8', 'Boulangerie Lumière', 'Francesa', '$$$', 'Bistrô francês com brunch estendido e carta de vinhos naturais.', 'Rua Lumière, 11 - Santo Antônio, Belo Horizonte')
+) AS r(id, name, cuisine_name, price_range, description, address)
+JOIN cuisines c ON c.name = r.cuisine_name;
+
+INSERT INTO restaurant_photos (restaurant_id, photo_url, sort_order) VALUES
+  ('r1', 'https://picsum.photos/seed/garfada-r1-1/1200/800', 1),
+  ('r1', 'https://picsum.photos/seed/garfada-r1-2/1200/800', 2),
+  ('r1', 'https://picsum.photos/seed/garfada-r1-3/1200/800', 3),
+  ('r2', 'https://picsum.photos/seed/garfada-r2-1/1200/800', 1),
+  ('r2', 'https://picsum.photos/seed/garfada-r2-2/1200/800', 2),
+  ('r2', 'https://picsum.photos/seed/garfada-r2-3/1200/800', 3),
+  ('r3', 'https://picsum.photos/seed/garfada-r3-1/1200/800', 1),
+  ('r3', 'https://picsum.photos/seed/garfada-r3-2/1200/800', 2),
+  ('r3', 'https://picsum.photos/seed/garfada-r3-3/1200/800', 3),
+  ('r4', 'https://picsum.photos/seed/garfada-r4-1/1200/800', 1),
+  ('r4', 'https://picsum.photos/seed/garfada-r4-2/1200/800', 2),
+  ('r4', 'https://picsum.photos/seed/garfada-r4-3/1200/800', 3),
+  ('r5', 'https://picsum.photos/seed/garfada-r5-1/1200/800', 1),
+  ('r5', 'https://picsum.photos/seed/garfada-r5-2/1200/800', 2),
+  ('r5', 'https://picsum.photos/seed/garfada-r5-3/1200/800', 3),
+  ('r6', 'https://picsum.photos/seed/garfada-r6-1/1200/800', 1),
+  ('r6', 'https://picsum.photos/seed/garfada-r6-2/1200/800', 2),
+  ('r6', 'https://picsum.photos/seed/garfada-r6-3/1200/800', 3),
+  ('r7', 'https://picsum.photos/seed/garfada-r7-1/1200/800', 1),
+  ('r7', 'https://picsum.photos/seed/garfada-r7-2/1200/800', 2),
+  ('r7', 'https://picsum.photos/seed/garfada-r7-3/1200/800', 3),
+  ('r8', 'https://picsum.photos/seed/garfada-r8-1/1200/800', 1),
+  ('r8', 'https://picsum.photos/seed/garfada-r8-2/1200/800', 2),
+  ('r8', 'https://picsum.photos/seed/garfada-r8-3/1200/800', 3);
+
+INSERT INTO restaurant_menu_items (restaurant_id, item_name, price_label, sort_order) VALUES
+  ('r1', 'Frango com quiabo braseado', 'R$ 62', 1),
+  ('r1', 'Tutu de feijão com crocante de couve', 'R$ 54', 2),
+  ('r1', 'Pudim de doce de leite artesanal', 'R$ 26', 3),
+  ('r2', 'Omakase 8 tempos', 'R$ 198', 1),
+  ('r2', 'Ramen de missô picante', 'R$ 68', 2),
+  ('r2', 'Mochi artesanal do dia', 'R$ 24', 3),
+  ('r3', 'Tagliatelle al ragù', 'R$ 66', 1),
+  ('r3', 'Pizza marguerita DOP', 'R$ 72', 2),
+  ('r3', 'Tiramisù clássico', 'R$ 28', 3),
+  ('r4', 'Ceviche clássico limão-siciliano', 'R$ 74', 1),
+  ('r4', 'Arroz de mariscos', 'R$ 96', 2),
+  ('r4', 'Suspiro de lúcuma', 'R$ 34', 3),
+  ('r5', 'Brisket defumado (300g)', 'R$ 88', 1),
+  ('r5', 'Costela suína glaceada', 'R$ 76', 2),
+  ('r5', 'Cheesecake de goiabada', 'R$ 25', 3),
+  ('r6', 'Nhoque de mandioquinha com pesto', 'R$ 58', 1),
+  ('r6', 'Bowl de legumes tostados', 'R$ 52', 2),
+  ('r6', 'Torta cremosa de cogumelos', 'R$ 44', 3),
+  ('r7', 'Butter chicken', 'R$ 64', 1),
+  ('r7', 'Palak paneer', 'R$ 58', 2),
+  ('r7', 'Naan com alho e manteiga', 'R$ 22', 3),
+  ('r8', 'Croque monsieur trufado', 'R$ 70', 1),
+  ('r8', 'Confit de canard', 'R$ 102', 2),
+  ('r8', 'Crème brûlée', 'R$ 32', 3);
+
+INSERT INTO reviews (id, restaurant_id, user_id, rating, comment, created_at, updated_at) VALUES
+  ('rev1', 'r1', 'u2', 4.8, 'Atendimento impecável e uma sobremesa memorável.', '2026-03-26T19:20:00.000Z', '2026-03-26T19:20:00.000Z'),
+  ('rev2', 'r1', 'u3', 4.2, 'Pratos bem executados, porção poderia ser um pouco maior.', '2026-03-20T21:10:00.000Z', '2026-03-20T21:10:00.000Z'),
+  ('rev3', 'r2', 'u5', 4.9, 'Peixes muito frescos e omakase criativo.', '2026-03-30T22:00:00.000Z', '2026-03-30T22:00:00.000Z'),
+  ('rev4', 'r2', 'u1', 4.5, 'Experiência muito boa no balcão, voltaria fácil.', '2026-03-22T22:15:00.000Z', '2026-03-22T22:15:00.000Z'),
+  ('rev5', 'r3', 'u1', 4.0, 'Massa fresca excelente, ambiente acolhedor.', '2026-03-12T20:40:00.000Z', '2026-03-12T20:40:00.000Z'),
+  ('rev6', 'r4', 'u2', 4.6, 'Ceviche com acidez equilibrada e ótimos drinks.', '2026-04-02T21:30:00.000Z', '2026-04-02T21:30:00.000Z'),
+  ('rev7', 'r5', 'u3', 4.4, 'Carne no ponto e acompanhamentos muito bons.', '2026-03-27T23:00:00.000Z', '2026-03-27T23:00:00.000Z'),
+  ('rev8', 'r6', 'u4', 4.7, 'Menu sazonal surpreendente e criativo.', '2026-03-25T19:55:00.000Z', '2026-03-25T19:55:00.000Z'),
+  ('rev9', 'r6', 'u1', 4.3, 'Excelente opção vegetariana para almoço.', '2026-03-08T18:10:00.000Z', '2026-03-08T18:10:00.000Z'),
+  ('rev10', 'r7', 'u4', 4.5, 'Especiarias equilibradas, naan incrível.', '2026-04-01T20:05:00.000Z', '2026-04-01T20:05:00.000Z'),
+  ('rev11', 'r8', 'u5', 4.8, 'Brunch excelente e confeitaria impecável.', '2026-03-31T15:30:00.000Z', '2026-03-31T15:30:00.000Z'),
+  ('rev12', 'r8', 'u2', 4.4, 'Ambiente charmoso, ótimo para encontros.', '2026-03-18T14:00:00.000Z', '2026-03-18T14:00:00.000Z');
+
+INSERT INTO wishlist_items (user_id, restaurant_id, added_at) VALUES
+  ('u1', 'r4', '2026-03-29T11:00:00.000Z'),
+  ('u1', 'r8', '2026-04-03T09:20:00.000Z'),
+  ('u1', 'r7', '2026-03-15T17:45:00.000Z'),
+  ('u2', 'r1', '2026-03-11T10:00:00.000Z'),
+  ('u3', 'r2', '2026-03-21T12:30:00.000Z'),
+  ('u4', 'r5', '2026-03-26T16:40:00.000Z'),
+  ('u5', 'r3', '2026-03-17T08:10:00.000Z');
+
+INSERT INTO visited_restaurants (user_id, restaurant_id, visited_at, user_rating) VALUES
+  ('u1', 'r2', '2026-03-22T22:15:00.000Z', 4.5),
+  ('u1', 'r6', '2026-03-08T18:10:00.000Z', 4.3),
+  ('u2', 'r4', '2026-04-02T21:30:00.000Z', 4.6),
+  ('u3', 'r5', '2026-03-27T23:00:00.000Z', 4.4),
+  ('u4', 'r7', '2026-04-01T20:05:00.000Z', 4.5),
+  ('u4', 'r6', '2026-03-25T19:55:00.000Z', 4.7),
+  ('u5', 'r8', '2026-03-31T15:30:00.000Z', 4.8);
+
+INSERT INTO user_follows (follower_user_id, followed_user_id, created_at) VALUES
+  ('u1', 'u2', '2026-03-10T12:00:00.000Z'),
+  ('u1', 'u3', '2026-03-12T12:00:00.000Z'),
+  ('u2', 'u5', '2026-03-14T12:00:00.000Z'),
+  ('u3', 'u1', '2026-03-16T12:00:00.000Z'),
+  ('u4', 'u2', '2026-03-18T12:00:00.000Z'),
+  ('u5', 'u2', '2026-03-20T12:00:00.000Z'),
+  ('u5', 'u4', '2026-03-22T12:00:00.000Z');
+
+INSERT INTO feed_events (id, type, user_id, target_user_id, restaurant_id, review_id, created_at) VALUES
+  ('feed1', 'review', 'u2', NULL, 'r4', 'rev6', '2026-04-02T21:30:00.000Z'),
+  ('feed2', 'visited', 'u4', NULL, 'r7', NULL, '2026-04-01T20:05:00.000Z'),
+  ('feed3', 'wishlist', 'u1', NULL, 'r8', NULL, '2026-04-03T09:20:00.000Z'),
+  ('feed4', 'review', 'u5', NULL, 'r8', 'rev11', '2026-03-31T15:30:00.000Z'),
+  ('feed5', 'review', 'u3', NULL, 'r5', 'rev7', '2026-03-27T23:00:00.000Z'),
+  ('feed6', 'visited', 'u1', NULL, 'r2', NULL, '2026-03-22T22:15:00.000Z');
+
 COMMIT;
