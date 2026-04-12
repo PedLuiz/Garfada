@@ -142,4 +142,112 @@ CREATE TABLE feed_events (
   )
 );
 
+-- Indices para filtros/joins frequentes em catalogo, perfil e feed.
+CREATE INDEX idx_user_favorite_cuisines_cuisine_id
+  ON user_favorite_cuisines (cuisine_id);
+
+CREATE INDEX idx_restaurants_cuisine_id
+  ON restaurants (cuisine_id);
+
+CREATE INDEX idx_restaurants_price_range
+  ON restaurants (price_range);
+
+CREATE INDEX idx_restaurants_name_lower
+  ON restaurants (LOWER(name));
+
+CREATE INDEX idx_restaurants_address_lower
+  ON restaurants (LOWER(address));
+
+CREATE INDEX idx_restaurant_photos_restaurant_sort
+  ON restaurant_photos (restaurant_id, sort_order);
+
+CREATE INDEX idx_restaurant_menu_items_restaurant_sort
+  ON restaurant_menu_items (restaurant_id, sort_order);
+
+CREATE INDEX idx_reviews_restaurant_created_at
+  ON reviews (restaurant_id, created_at DESC);
+
+CREATE INDEX idx_reviews_user_created_at
+  ON reviews (user_id, created_at DESC);
+
+CREATE INDEX idx_wishlist_items_user_added_at
+  ON wishlist_items (user_id, added_at DESC);
+
+CREATE INDEX idx_wishlist_items_restaurant_id
+  ON wishlist_items (restaurant_id);
+
+CREATE INDEX idx_visited_restaurants_user_visited_at
+  ON visited_restaurants (user_id, visited_at DESC);
+
+CREATE INDEX idx_visited_restaurants_restaurant_id
+  ON visited_restaurants (restaurant_id);
+
+CREATE INDEX idx_user_follows_followed_user_id
+  ON user_follows (followed_user_id);
+
+CREATE INDEX idx_feed_events_created_at_desc
+  ON feed_events (created_at DESC);
+
+CREATE INDEX idx_feed_events_user_created_at
+  ON feed_events (user_id, created_at DESC);
+
+CREATE INDEX idx_feed_events_target_user_created_at
+  ON feed_events (target_user_id, created_at DESC);
+
+CREATE INDEX idx_feed_events_restaurant_created_at
+  ON feed_events (restaurant_id, created_at DESC);
+
+CREATE VIEW v_restaurant_stats AS
+SELECT
+  r.id AS restaurant_id,
+  COALESCE(ROUND(AVG(rv.rating)::NUMERIC, 1), 0.0) AS average_rating,
+  COUNT(rv.id) AS reviews_count,
+  COUNT(NULLIF(BTRIM(rv.comment), '')) AS comments_count,
+  COALESCE(vs.visits_count, 0) AS visits_count
+FROM restaurants r
+LEFT JOIN reviews rv ON rv.restaurant_id = r.id
+LEFT JOIN (
+  SELECT
+    restaurant_id,
+    COUNT(*) AS visits_count
+  FROM visited_restaurants
+  GROUP BY restaurant_id
+) vs ON vs.restaurant_id = r.id
+GROUP BY r.id, vs.visits_count;
+
+CREATE VIEW v_user_stats AS
+SELECT
+  u.id AS user_id,
+  COALESCE(rv.reviews_count, 0) AS reviews_count,
+  COALESCE(vt.visited_count, 0) AS visited_count,
+  COALESCE(ws.wishlist_count, 0) AS wishlist_count,
+  COALESCE(fr.followers_count, 0) AS followers_count,
+  COALESCE(fg.following_count, 0) AS following_count
+FROM users u
+LEFT JOIN (
+  SELECT user_id, COUNT(*) AS reviews_count
+  FROM reviews
+  GROUP BY user_id
+) rv ON rv.user_id = u.id
+LEFT JOIN (
+  SELECT user_id, COUNT(*) AS visited_count
+  FROM visited_restaurants
+  GROUP BY user_id
+) vt ON vt.user_id = u.id
+LEFT JOIN (
+  SELECT user_id, COUNT(*) AS wishlist_count
+  FROM wishlist_items
+  GROUP BY user_id
+) ws ON ws.user_id = u.id
+LEFT JOIN (
+  SELECT followed_user_id AS user_id, COUNT(*) AS followers_count
+  FROM user_follows
+  GROUP BY followed_user_id
+) fr ON fr.user_id = u.id
+LEFT JOIN (
+  SELECT follower_user_id AS user_id, COUNT(*) AS following_count
+  FROM user_follows
+  GROUP BY follower_user_id
+) fg ON fg.user_id = u.id;
+
 COMMIT;
