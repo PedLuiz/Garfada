@@ -1,5 +1,7 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import registerDishImage from '../assets/auth/register-dish.png'
+import { AuthShowcaseLayout } from '../components/common/AuthShowcaseLayout'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 import { useAuth } from '../hooks/useAuth'
@@ -23,7 +25,7 @@ function validate(form) {
   if (!form.email.trim()) {
     errors.email = 'Informe seu e-mail.'
   } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
-    errors.email = 'Digite um e-mail válido.'
+    errors.email = 'Digite um e-mail valido.'
   }
 
   if (!form.username.trim()) {
@@ -39,11 +41,11 @@ function validate(form) {
   }
 
   if (form.confirmPassword !== form.password) {
-    errors.confirmPassword = 'As senhas não conferem.'
+    errors.confirmPassword = 'As senhas nao conferem.'
   }
 
   if (!form.acceptedTerms) {
-    errors.acceptedTerms = 'Você precisa aceitar para continuar.'
+    errors.acceptedTerms = 'Voce precisa aceitar para continuar.'
   }
 
   return errors
@@ -101,11 +103,20 @@ export function RegisterPage() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-xl rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm shadow-black/5 lg:p-8">
-      <h1 className="font-display text-3xl text-[var(--text-primary)]">Criar conta no Garfada</h1>
-      <p className="mt-2 text-sm text-[var(--text-secondary)]">Comece a registrar suas experiências gastronômicas.</p>
+    <AuthShowcaseLayout
+      imageSrc={registerDishImage}
+      imageAlt="Prato gourmet em mesa de restaurante"
+      panelBadge="Bem-vindo ao Garfada"
+      imageTitle="Transforme cada refeicao em descoberta"
+      imageDescription="Crie sua conta para registrar experiencias, seguir pessoas com gosto parecido e salvar seus proximos restaurantes."
+      panelPills={['Perfil gastronomico', 'Feed da comunidade', 'Historico de visitas']}
+    >
+      <h1 className="font-display text-3xl text-[#2f180d] sm:text-4xl">Criar conta no Garfada</h1>
+      <p className="mt-2 max-w-md text-sm text-[#6f3d26] sm:text-base">
+        Comece agora a organizar suas descobertas gastronomicas em um unico lugar.
+      </p>
 
-      <form className="mt-6 space-y-4" onSubmit={handleSubmit} noValidate>
+      <form className="mt-7 space-y-4" onSubmit={handleSubmit} noValidate>
         <Input
           label="Nome"
           name="name"
@@ -113,6 +124,7 @@ export function RegisterPage() {
           value={form.name}
           onChange={(event) => handleChange('name', event.target.value)}
           error={errors.name}
+          className="border-[#efc8a9] bg-white"
         />
 
         <Input
@@ -123,15 +135,17 @@ export function RegisterPage() {
           value={form.email}
           onChange={(event) => handleChange('email', event.target.value)}
           error={errors.email}
+          className="border-[#efc8a9] bg-white"
         />
 
         <Input
           label="Username"
           name="username"
-          placeholder="como você será encontrado"
+          placeholder="como voce sera encontrado"
           value={form.username}
           onChange={(event) => handleChange('username', event.target.value)}
           error={errors.username}
+          className="border-[#efc8a9] bg-white"
         />
 
         <Input
@@ -142,6 +156,7 @@ export function RegisterPage() {
           value={form.password}
           onChange={(event) => handleChange('password', event.target.value)}
           error={errors.password}
+          className="border-[#efc8a9] bg-white"
         />
 
         <Input
@@ -152,32 +167,38 @@ export function RegisterPage() {
           value={form.confirmPassword}
           onChange={(event) => handleChange('confirmPassword', event.target.value)}
           error={errors.confirmPassword}
+          className="border-[#efc8a9] bg-white"
         />
 
-        <label className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
+        <label className="mt-1 flex items-start gap-2 text-sm text-[#72422c]">
           <input
             type="checkbox"
-            className="mt-1 size-4 rounded border-[var(--border)]"
+            className="mt-1 size-4 rounded border-[#d99e75] text-[#b54824]"
             checked={form.acceptedTerms}
             onChange={(event) => handleChange('acceptedTerms', event.target.checked)}
           />
-          Aceito os termos de uso e política de comunidade do Garfada.
+          Aceito os termos de uso e a politica de comunidade do Garfada.
         </label>
-        {errors.acceptedTerms && <p className="text-sm text-[var(--secondary)]">{errors.acceptedTerms}</p>}
+        {errors.acceptedTerms && <p className="text-sm text-[#a94c22]">{errors.acceptedTerms}</p>}
 
-        {submitError && <p className="text-sm text-[var(--secondary)]">{submitError}</p>}
+        {submitError && <p className="rounded-xl border border-[#f0c6a5] bg-[#fff2e6] px-3 py-2 text-sm text-[#a94c22]">{submitError}</p>}
 
-        <Button type="submit" className="w-full" isLoading={isSubmitting} disabled={hasErrors && isSubmitting}>
+        <Button
+          type="submit"
+          className="mt-1 h-12 w-full bg-[#b54824] text-base text-white hover:bg-[#97381a]"
+          isLoading={isSubmitting}
+          disabled={hasErrors && isSubmitting}
+        >
           Criar conta
         </Button>
       </form>
 
-      <p className="mt-5 text-sm text-[var(--text-secondary)]">
-        Já tem conta?{' '}
-        <Link to="/login" className="font-medium text-[var(--accent)] hover:underline">
+      <p className="mt-5 text-sm text-[#74422b]">
+        Ja tem conta?{' '}
+        <Link to="/login" className="font-semibold text-[#b54824] hover:text-[#8e3418] hover:underline">
           Entrar
         </Link>
       </p>
-    </section>
+    </AuthShowcaseLayout>
   )
 }
