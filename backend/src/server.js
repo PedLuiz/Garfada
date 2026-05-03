@@ -418,7 +418,18 @@ app.use((error, _req, res, _next) => {
   }
 
   console.error(error)
-  return res.status(500).json({ message: 'Erro interno do servidor.' })
+  const payload = { message: 'Erro interno do servidor.' }
+
+  if (process.env.NODE_ENV !== 'production') {
+    payload.debug = {
+      message: error?.message,
+      code: error?.code,
+      detail: error?.detail,
+      constraint: error?.constraint,
+    }
+  }
+
+  return res.status(500).json(payload)
 })
 
 app.listen(port, () => {

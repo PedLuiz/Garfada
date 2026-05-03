@@ -109,6 +109,35 @@ function sanitizeCuisineNames(cuisines = []) {
   return [...uniqueByLower.values()]
 }
 
+function inferUserUniqueViolationField(error) {
+  const detail = typeof error?.detail === 'string' ? error.detail.toLowerCase() : ''
+  const constraint = typeof error?.constraint === 'string' ? error.constraint.toLowerCase() : ''
+
+  if (detail.includes('(email)') || constraint.includes('email')) {
+    return 'email'
+  }
+
+  if (detail.includes('(username)') || constraint.includes('username')) {
+    return 'username'
+  }
+
+  return null
+}
+
+function throwUserUniqueViolation(error) {
+  const field = inferUserUniqueViolationField(error)
+
+  if (field === 'email') {
+    throw new AppError('Esse e-mail já está em uso.', 409)
+  }
+
+  if (field === 'username') {
+    throw new AppError('Esse username já foi escolhido por outra pessoa.', 409)
+  }
+
+  throw new AppError('E-mail ou username já está em uso.', 409)
+}
+
 async function syncFavoriteCuisines(userId, cuisines, executor) {
   const queryExecutor = resolveExecutor(executor)
   const names = sanitizeCuisineNames(cuisines)
@@ -226,12 +255,8 @@ async function createUser({ name, email, username, passwordHash, avatarUrl, bio 
 
       return getAuthUserById(userId, client)
     } catch (error) {
-      if (isUniqueViolation(error, 'ux_users_email_ci')) {
-        throw new AppError('Esse e-mail já está em uso.', 409)
-      }
-
-      if (isUniqueViolation(error, 'ux_users_username_ci')) {
-        throw new AppError('Esse username já foi escolhido por outra pessoa.', 409)
+      if (isUniqueViolation(error)) {
+        throwUserUniqueViolation(error)
       }
 
       throw error
@@ -344,12 +369,8 @@ async function updateMeProfile(userId, payload) {
           throw new AppError('Usuário não encontrado.', 404)
         }
       } catch (error) {
-        if (isUniqueViolation(error, 'ux_users_username_ci')) {
-          throw new AppError('Username indisponível no momento.', 409)
-        }
-
-        if (isUniqueViolation(error, 'ux_users_email_ci')) {
-          throw new AppError('Esse e-mail já está em uso.', 409)
+        if (isUniqueViolation(error)) {
+          throwUserUniqueViolation(error)
         }
 
         throw error
