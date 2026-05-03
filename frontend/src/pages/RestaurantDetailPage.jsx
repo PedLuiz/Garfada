@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { PageHeading } from '../components/common/PageHeading'
 import { ReviewCard } from '../components/common/ReviewCard'
@@ -27,6 +27,7 @@ export function RestaurantDetailPage() {
   const [activeTab, setActiveTab] = useState('overview')
   const [showReviewForm, setShowReviewForm] = useState(false)
   const [feedbackMessage, setFeedbackMessage] = useState('')
+  const reviewsSectionRef = useRef(null)
 
   const loadDetails = useCallback(async () => {
     const [restaurant, reviews, wishlist, visited] = await Promise.all([
@@ -110,6 +111,20 @@ export function RestaurantDetailPage() {
     setFeedbackMessage('Avaliação publicada com sucesso.')
   }
 
+  function openReviewsSection({ openForm = false } = {}) {
+    setActiveTab('reviews')
+    if (openForm) {
+      setShowReviewForm(true)
+    }
+
+    window.requestAnimationFrame(() => {
+      reviewsSectionRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    })
+  }
+
   if (loading) {
     return <LoadingState title="Carregando restaurante" description="Buscando detalhes e avaliações." />
   }
@@ -170,12 +185,12 @@ export function RestaurantDetailPage() {
 
             <div className="mt-4 flex flex-wrap gap-2">
               <Button variant={isWishlisted ? 'highlight' : 'secondary'} onClick={handleToggleWishlist}>
-                {isWishlisted ? 'Na Lista de Desejos' : 'Adicionar à Lista'}
+                {isWishlisted ? 'Remover da Lista de Desejos' : 'Adicionar à Lista de Desejos'}
               </Button>
               <Button variant={isVisited ? 'primary' : 'secondary'} onClick={handleToggleVisited}>
                 {isVisited ? 'Visitado' : 'Marcar Visitado'}
               </Button>
-              <Button variant="secondary" onClick={() => setShowReviewForm((current) => !current)}>
+              <Button variant="secondary" onClick={() => openReviewsSection({ openForm: true })}>
                 Avaliar
               </Button>
             </div>
@@ -210,14 +225,17 @@ export function RestaurantDetailPage() {
         ]}
       />
 
-      <section className="space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4">
+      <section
+        ref={reviewsSectionRef}
+        className="space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4"
+      >
         <Tabs tabs={detailTabs} activeTab={activeTab} onChange={setActiveTab} />
 
         {activeTab === 'overview' && (
           <div className="space-y-3 text-sm text-[var(--text-secondary)]">
             <p>{restaurant.description}</p>
             <p>Explore as avaliações para entender o que a comunidade mais valoriza na experiência.</p>
-            <Button variant="secondary" onClick={() => setActiveTab('reviews')}>
+            <Button variant="secondary" onClick={() => openReviewsSection()}>
               Ver reviews
             </Button>
           </div>

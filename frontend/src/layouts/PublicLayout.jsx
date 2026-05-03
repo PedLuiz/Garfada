@@ -1,6 +1,19 @@
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 
 export function PublicLayout() {
+  const location = useLocation()
+  const isLanding = location.pathname === '/'
+
+  if (isLanding) {
+    return (
+      <div className="min-h-screen bg-[var(--bg)]">
+        <main className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 lg:px-8 lg:py-8">
+          <Outlet />
+        </main>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-[var(--bg)]">
       <header className="border-b border-[var(--border)]">
