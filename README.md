@@ -103,3 +103,33 @@ erDiagram
     }
 ```
 
+### Diagrama de Sequência (Fluxo de Interação e Propagação no Feed)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Cliente as Usuário (Frontend)
+    participant API as Backend (API)
+    participant DB as Banco de Dados (PostgreSQL)
+
+    Cliente->>API: POST /reviews (restaurant_id, rating, comment)
+    
+    activate API
+    API->>API: Valida payload e autenticação
+    
+    API->>DB: BEGIN TRANSACTION
+    
+    API->>DB: INSERT INTO reviews
+    DB-->>API: Confirma criação do Review
+    
+    API->>DB: INSERT INTO feed_events (type: 'review')
+    Note right of DB: Vincula o evento ao user_id, restaurant_id e review_id
+    DB-->>API: Confirma criação do Evento de Feed
+    
+    API->>DB: COMMIT
+    
+    API-->>Cliente: 201 Created (Review Data)
+    deactivate API
+
+    Note over Cliente,DB: As views v_restaurant_stats e v_user_stats<br/>refletirão a nova avaliação automaticamente nas próximas leituras.
+```
