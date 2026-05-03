@@ -1,47 +1,23 @@
 # Garfada
+Repositório dedicado para o sistema Garfada, desenvolvido para o trabalho prático da disciplina de Engenharia de Software UFMG.
 
-Repositório do Garfada com frontend React + backend Node/Express integrado ao PostgreSQL.
+O Garfada é uma plataforma de catálogo e avaliação de restaurantes projetada para centralizar e socializar a experiência gastronômica. Inspirado em grandes sistemas de avaliação de filmes (IMDb, Rotten Tomatoes, Letterboxd etc), o sistema permite que usuários registrem suas visitas, críticas, atribuam notas e organizem listas de desejos personalizadas. Através de filtros dinâmicos e perfis sociais, a aplicação conecta o paladar da comunidade com detalhes reais do cardápio, preços e ambientes.
 
-## Stack
-- Frontend: React + Vite
-- Backend: Node.js + Express + pg
-- Banco: PostgreSQL (schema e seeds em `db/init.sql`)
+## Membros
+- Daniel da Cunha Costa - Full Stack
+- Isaac Reyes Alves de Abreu - Full Stack
+- Pedro Luiz Silva - Full Stack
 
-## Subindo tudo com Docker
-Na raiz do projeto:
+## Tecnologias e Agentes
+- React + Node.js + PostgreSQL 
+- Codex
 
-```bash
-docker compose up --build
-```
-
-Serviços:
-- Frontend: `http://localhost:5173`
-- Backend: `http://localhost:3001`
-- PostgreSQL: `localhost:5432`
-
-O schema é carregado automaticamente a partir de `db/init.sql` na primeira subida do banco.
-
-## Variáveis de ambiente
-Copie `.env.example` para `.env` e ajuste se necessário.
-
-Principais variáveis:
-- `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, `PGPASSWORD`
-- `JWT_SECRET`, `JWT_EXPIRES_IN`
-- `PORT`
-- `VITE_API_URL`
-
-## Credenciais seed para login
-Os usuários seedados usam a senha:
-
-```text
-garfada123
-```
-
-Exemplo:
-- email: `pedro@garfada.app`
-- username: `pedrins`
-- senha: `garfada123`
-
-## Endpoints do frontend
-Contratos esperados no frontend:
-- `frontend/ENDPOINTS.md`
+## Histórias de usuários
+- Como usuário do sistema, gostaria de filtrar os restaurantes por tipo de cozinha, faixa de preço, para que eu encontre rapidamente um lugar que combine com meu desejo e condição no momento.
+- Como cliente, eu quero poder visualizar as fotos dos ambientes e o cardápio do restaurante, para avaliar se o local é adequado para ocasião.
+- Como usuário, eu gostaria de dar uma nota de 1 a 5 estrelas e escrever um comentário descrevendo minha visita ao local, para que eu possa expressar minha opnião e ajudar a comunidade a escolher melhor, e também conseguir ver a opnião de outras pessoas.
+- Como usuário, eu quero poder salvar restaurantes em um "Lista de Desejos", para poder organizar melhor como um lembrete onde eu planejo visitar futuramente.
+- Como usuário, eu quero poder marcar restaurantes como "Visitados", para que eu mantenha um registro pessoal da minha trajetória gastronômica bem como acompanhar a trajetória das minhas conexões.
+- Como usuário, eu quero poder seguir amigos ou críticos locais, que também utilizam o sistema, para poder acompanhar as avaliações de pessoas em cujo paladar eu confio.
+- Como usuário cadastrado, eu quero poder editar minha bio e foto de perfil para que as outras pessoas na rede possam me identificar e conhecer meu estilo de culinária favorito.
+- Como usuário gostaria de ver as médias estatísticas (avaliações, comentários, visitas) dos restaurantes no catálogo para poder auxiliar na minha escolha.
