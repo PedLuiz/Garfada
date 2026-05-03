@@ -1,0 +1,56 @@
+const crypto = require('crypto')
+
+const PASSWORD_SCHEME = 'pbkdf2_sha256'
+const DEFAULT_ITERATIONS = Number(process.env.PASSWORD_PBKDF2_ITERATIONS) || 120000
+const KEY_LENGTH = 32
+
+function toBase64Url(buffer) {
+  return buffer.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '')
+}
+
+function fromBase64Url(value) {
+  const normalized = value.replace(/-/g, '+').replace(/_/g, '/')
+  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, '=')
+  return Buffer.from(padded, 'base64')
+}
+
+function hashPassword(password) {
+  const salt = crypto.randomBytes(12).toString('hex')
+  const saltEncoded = Buffer.from(salt, 'utf8').toString('base64')
+  const digest = crypto.pbkdf2Sync(password, salt, DEFAULT_ITERATIONS, KEY_LENGTH, 'sha256')
+
+  return `${PASSWORD_SCHEME}$${DEFAULT_ITERATIONS}$${saltEncoded}$${toBase64Url(digest)}`
+}
+
+function verifyPassword(password, encodedHash) {
+  if (!encodedHash || typeof encodedHash !== 'string') {
+    return false
+  }
+
+  const [scheme, iterationsRaw, saltEncoded, digestEncoded] = encodedHash.split('$')
+
+  if (scheme !== PASSWORD_SCHEME || !iterationsRaw || !saltEncoded || !digestEncoded) {
+    return false
+  }
+
+  const iterations = Number(iterationsRaw)
+
+  if (!Number.isInteger(iterations) || iterations <= 0) {
+    return false
+  }
+
+  const salt = Buffer.from(saltEncoded, 'base64').toString('utf8')
+  const computed = crypto.pbkdf2Sync(password, salt, iterations, KEY_LENGTH, 'sha256')
+  const expected = fromBase64Url(digestEncoded)
+
+  if (computed.length !== expected.length) {
+    return false
+  }
+
+  return crypto.timingSafeEqual(computed, expected)
+}
+
+module.exports = {
+  hashPassword,
+  verifyPassword,
+}
