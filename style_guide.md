@@ -77,8 +77,91 @@ O objetivo é garantir **consistência visual, legibilidade e identidade gastron
 
 ## Fontes
 - **Principal (UI):** Inter
-- **Títulos:** Poppins
+- **Principal (Títulos):** Giahfita
+- **Principal (Logo):** Giahfita
+- **Fallback para títulos/logo:** Poppins
 
-## Import (Google Fonts)
+## Instalação da Giahfita
+1. Adicionar os arquivos da fonte em `frontend/public/fonts/`:
+   - `Giahfita-Regular.woff2`
+   - `Giahfita-Regular.woff`
+2. Declarar `@font-face` no `frontend/src/index.css`.
+3. Usar `Giahfita` como `--font-display` para títulos e identidade de marca.
+
+## Import e Configuração
 ```css
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap');
+
+@font-face {
+  font-family: 'Giahfita';
+  src:
+    url('/fonts/Giahfita-Regular.woff2') format('woff2'),
+    url('/fonts/Giahfita-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Giahfita', 'Poppins', ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+## Regras de Uso
+- Logo da aplicação deve usar `font-display` (`Giahfita`).
+- Títulos (`h1`, `h2`, `h3`, `h4`) devem usar `font-display`.
+- Conteúdo corrido e formulários devem usar `font-sans` (`Inter`).
+- Garantir licença comercial da fonte Giahfita antes de publicar em produção.
+
+---
+
+# 🧭 5. Padrões de Catálogo
+
+Para páginas de catálogo (ex.: `/catalogo`), usar uma linguagem visual mais editorial sem perder clareza operacional.
+
+## Header do catálogo
+- Estrutura recomendada:
+  - `eyebrow` curto (categoria/contexto)
+  - `h1` forte com descrição objetiva
+  - métricas rápidas (filtros ativos, volume de resultados, critério principal)
+- Fundo:
+  - Pode usar gradiente suave com `color-mix` entre `--surface`, `--accent` e `--primary`
+  - Manter contraste alto para textos
+
+## Seletor de filtros
+- Deve ser um bloco de decisão, não apenas um formulário.
+- Incluir:
+  - Título orientado à ação
+  - Contador de filtros ativos
+  - Ação de limpeza visível (`Limpar filtros`)
+  - Resumo dos filtros aplicados em chips
+- Inputs e selects:
+  - bordas mais evidentes que o container
+  - `focus-visible` consistente com cor de navegação (`--accent` ou `--primary`)
+
+## Cards de restaurante
+- Hierarquia recomendada:
+  1. Foto e sinais rápidos (preço, nota)
+  2. Nome e contexto (cozinha/localização)
+  3. Descrição curta
+  4. Evidências (avaliações, visitas)
+  5. Ações (`Salvar`, `Marcar visita`)
+- Padrões visuais:
+  - Hover com elevação leve (não exagerar blur/sombra)
+  - Overlay para legibilidade sobre imagem
+  - Tags informativas com contraste AA+
+
+---
+
+# ✅ 6. Qualidade de Experiência
+
+- Priorizar leitura em telas pequenas antes de refinamentos decorativos.
+- Toda interação deve manter estados claros:
+  - normal
+  - hover/focus
+  - ativo
+  - desabilitado
+- Evitar ruído visual:
+  - no máximo 1–2 cores de destaque por bloco
+  - textos auxiliares sempre em `--text-secondary`
