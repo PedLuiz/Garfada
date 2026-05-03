@@ -25,7 +25,7 @@ function validate(form) {
   if (!form.email.trim()) {
     errors.email = 'Informe seu e-mail.'
   } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
-    errors.email = 'Digite um e-mail valido.'
+    errors.email = 'Digite um e-mail válido.'
   }
 
   if (!form.username.trim()) {
@@ -41,11 +41,11 @@ function validate(form) {
   }
 
   if (form.confirmPassword !== form.password) {
-    errors.confirmPassword = 'As senhas nao conferem.'
+    errors.confirmPassword = 'As senhas não conferem.'
   }
 
   if (!form.acceptedTerms) {
-    errors.acceptedTerms = 'Voce precisa aceitar para continuar.'
+    errors.acceptedTerms = 'Você precisa aceitar para continuar.'
   }
 
   return errors
@@ -107,13 +107,13 @@ export function RegisterPage() {
       imageSrc={registerDishImage}
       imageAlt="Prato gourmet em mesa de restaurante"
       panelBadge="Bem-vindo ao Garfada"
-      imageTitle="Transforme cada refeicao em descoberta"
-      imageDescription="Crie sua conta para registrar experiencias, seguir pessoas com gosto parecido e salvar seus proximos restaurantes."
-      panelPills={['Perfil gastronomico', 'Feed da comunidade', 'Historico de visitas']}
+      imageTitle="Transforme cada refeição em descoberta"
+      imageDescription="Crie sua conta para registrar experiências, seguir pessoas com gosto parecido e salvar seus próximos restaurantes."
+      panelPills={['Perfil gastronômico', 'Feed da comunidade', 'Histórico de visitas']}
     >
       <h1 className="font-display text-3xl text-[#2f180d] sm:text-4xl">Criar conta no Garfada</h1>
       <p className="mt-2 max-w-md text-sm text-[#6f3d26] sm:text-base">
-        Comece agora a organizar suas descobertas gastronomicas em um unico lugar.
+        Comece agora a organizar suas descobertas gastronômicas em um único lugar.
       </p>
 
       <form className="mt-7 space-y-4" onSubmit={handleSubmit} noValidate>
@@ -131,7 +131,7 @@ export function RegisterPage() {
           label="E-mail"
           name="email"
           type="email"
-          placeholder="voce@email.com"
+          placeholder="você@email.com"
           value={form.email}
           onChange={(event) => handleChange('email', event.target.value)}
           error={errors.email}
@@ -141,7 +141,7 @@ export function RegisterPage() {
         <Input
           label="Username"
           name="username"
-          placeholder="como voce sera encontrado"
+          placeholder="como você será encontrado"
           value={form.username}
           onChange={(event) => handleChange('username', event.target.value)}
           error={errors.username}
@@ -177,7 +177,7 @@ export function RegisterPage() {
             checked={form.acceptedTerms}
             onChange={(event) => handleChange('acceptedTerms', event.target.checked)}
           />
-          Aceito os termos de uso e a politica de comunidade do Garfada.
+          Aceito os termos de uso e a política de comunidade do Garfada.
         </label>
         {errors.acceptedTerms && <p className="text-sm text-[#a94c22]">{errors.acceptedTerms}</p>}
 
@@ -194,7 +194,7 @@ export function RegisterPage() {
       </form>
 
       <p className="mt-5 text-sm text-[#74422b]">
-        Ja tem conta?{' '}
+        Já tem conta?{' '}
         <Link to="/login" className="font-semibold text-[#b54824] hover:text-[#8e3418] hover:underline">
           Entrar
         </Link>

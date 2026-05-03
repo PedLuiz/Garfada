@@ -68,19 +68,19 @@ export function LoginPage() {
     <AuthShowcaseLayout
       imageSrc={loginRestaurantImage}
       imageAlt="Ambiente elegante de restaurante ao entardecer"
-      imageTitle="Bem vindo de volta"
+      imageTitle="Bem-vindo de volta"
       panelCompact
     >
       <h1 className="font-display text-3xl text-[#2f180d] sm:text-4xl">Entrar</h1>
       <p className="mt-2 max-w-md text-sm text-[#6f3d26] sm:text-base">
-        Acesse sua conta para continuar explorando restaurantes e compartilhando experiencias.
+        Acesse sua conta para continuar explorando restaurantes e compartilhando experiências.
       </p>
 
       <form className="mt-7 space-y-4" onSubmit={handleSubmit} noValidate>
         <Input
           label="E-mail ou username"
           name="identifier"
-          placeholder="voce@email.com ou @username"
+          placeholder="você@email.com ou @username"
           value={form.identifier}
           onChange={(event) => handleChange('identifier', event.target.value)}
           error={errors.identifier}
@@ -105,7 +105,7 @@ export function LoginPage() {
       </form>
 
       <p className="mt-5 text-sm text-[#74422b]">
-        Ainda nao tem conta?{' '}
+        Ainda não tem conta?{' '}
         <Link to="/cadastro" className="font-semibold text-[#b54824] hover:text-[#8e3418] hover:underline">
           Criar conta
         </Link>
