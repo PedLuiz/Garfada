@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { Button } from '../ui/Button'
 import { Textarea } from '../ui/Textarea'
 
-export function ReviewForm({ onSubmit, onCancel, initialRating = 4, initialComment = '' }) {
-  const [rating, setRating] = useState(initialRating)
+export function ReviewForm({ onSubmit, onCancel, rating = 0, initialComment = '' }) {
   const [comment, setComment] = useState(initialComment)
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -13,7 +12,7 @@ export function ReviewForm({ onSubmit, onCancel, initialRating = 4, initialComme
     setError('')
 
     if (rating < 1 || rating > 5) {
-      setError('Escolha uma nota entre 1 e 5 estrelas.')
+      setError('Selecione uma nota nas estrelas ao lado do botão Avaliar.')
       return
     }
 
@@ -32,23 +31,10 @@ export function ReviewForm({ onSubmit, onCancel, initialRating = 4, initialComme
   return (
     <form className="space-y-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4" onSubmit={handleSubmit}>
       <div>
-        <p className="text-sm font-medium text-[var(--text-primary)]">Sua nota</p>
-        <div className="mt-2 flex items-center gap-2">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              type="button"
-              className={`rounded-full px-3 py-1.5 text-sm font-semibold transition ${
-                star <= rating
-                  ? 'bg-[var(--highlight)] text-[var(--deep-accent)]'
-                  : 'bg-[var(--bg)] text-[var(--text-secondary)]'
-              }`}
-              onClick={() => setRating(star)}
-            >
-              {star} ★
-            </button>
-          ))}
-        </div>
+        <p className="text-sm font-medium text-[var(--text-primary)]">Sua nota atual</p>
+        <p className="mt-1 text-sm text-[var(--text-secondary)]">
+          {rating > 0 ? `${rating}/5 estrelas` : 'Selecione a nota nas estrelas ao lado do botão Avaliar.'}
+        </p>
       </div>
 
       <Textarea

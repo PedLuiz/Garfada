@@ -9,23 +9,19 @@ import { Button } from '../components/ui/Button'
 import { EmptyState } from '../components/ui/EmptyState'
 import { ErrorState } from '../components/ui/ErrorState'
 import { LoadingState } from '../components/ui/LoadingState'
-import { Tabs } from '../components/ui/Tabs'
 import { useAuth } from '../hooks/useAuth'
 import { useAsyncData } from '../hooks/useAsyncData'
 import { formatPriceRange } from '../utils/format'
 import { restaurantService } from '../services/restaurantService'
 import { reviewService } from '../services/reviewService'
 
-const detailTabs = [
-  { value: 'overview', label: 'Visão Geral' },
-  { value: 'reviews', label: 'Reviews' },
-]
+const quickRatingValues = [1, 2, 3, 4, 5]
 
 export function RestaurantDetailPage() {
   const { id } = useParams()
-  const { refreshMe } = useAuth()
-  const [activeTab, setActiveTab] = useState('overview')
+  const { me, refreshMe } = useAuth()
   const [showReviewForm, setShowReviewForm] = useState(false)
+  const [quickRating, setQuickRating] = useState(0)
   const [feedbackMessage, setFeedbackMessage] = useState('')
   const reviewsSectionRef = useRef(null)
 
@@ -46,6 +42,25 @@ export function RestaurantDetailPage() {
   }, [id])
 
   const { data, setData, loading, error, reload } = useAsyncData(loadDetails)
+
+  const syncDetailData = useCallback(async () => {
+    const [restaurant, reviews] = await Promise.all([
+      restaurantService.getById(id),
+      reviewService.listByRestaurant(id),
+    ])
+
+    setData((current) => {
+      if (!current) {
+        return current
+      }
+
+      return {
+        ...current,
+        restaurant,
+        reviews,
+      }
+    })
+  }, [id, setData])
 
   useEffect(() => {
     if (!feedbackMessage) {
@@ -106,23 +121,24 @@ export function RestaurantDetailPage() {
   async function handleCreateReview(payload) {
     await reviewService.create(id, payload)
     setShowReviewForm(false)
-    await reload()
+    await syncDetailData()
     await refreshMe()
     setFeedbackMessage('Avaliação publicada com sucesso.')
   }
 
-  function openReviewsSection({ openForm = false } = {}) {
-    setActiveTab('reviews')
-    if (openForm) {
-      setShowReviewForm(true)
+  async function handleSubmitQuickRating(existingComment = '') {
+    if (quickRating < 1 || quickRating > 5) {
+      setFeedbackMessage('Selecione uma nota de 1 a 5 estrelas antes de avaliar.')
+      return
     }
 
-    window.requestAnimationFrame(() => {
-      reviewsSectionRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
+    await reviewService.create(id, {
+      rating: quickRating,
+      comment: existingComment,
     })
+    await syncDetailData()
+    await refreshMe()
+    setFeedbackMessage(`Nota ${quickRating}/5 enviada com sucesso.`)
   }
 
   if (loading) {
@@ -140,6 +156,8 @@ export function RestaurantDetailPage() {
   const { restaurant, reviews, wishlistIds, visitedIds } = data
   const isWishlisted = wishlistIds.includes(restaurant.id)
   const isVisited = visitedIds.includes(restaurant.id)
+  const myReview = me ? reviews.find((review) => review.user.id === me.id) : null
+  const writtenReviews = reviews.filter((review) => (review.comment ?? '').trim().length > 0)
 
   return (
     <div className="space-y-6">
@@ -190,7 +208,26 @@ export function RestaurantDetailPage() {
               <Button variant={isVisited ? 'primary' : 'secondary'} onClick={handleToggleVisited}>
                 {isVisited ? 'Visitado' : 'Marcar Visitado'}
               </Button>
-              <Button variant="secondary" onClick={() => openReviewsSection({ openForm: true })}>
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <span className="rate" role="radiogroup" aria-label="Selecione uma nota de 1 a 5 estrelas">
+                {quickRatingValues.map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    role="radio"
+                    aria-checked={quickRating === star}
+                    aria-label={`${star} estrela${star > 1 ? 's' : ''}`}
+                    className={`rate-star ${star <= quickRating ? 'is-selected' : ''}`}
+                    onClick={() => setQuickRating(star)}
+                  >
+                    ★
+                  </button>
+                ))}
+              </span>
+              <p className="text-sm text-[var(--text-secondary)]">Nota: {quickRating}/5</p>
+              <Button variant="secondary" onClick={() => handleSubmitQuickRating(myReview?.comment ?? '')}>
                 Avaliar
               </Button>
             </div>
@@ -211,7 +248,7 @@ export function RestaurantDetailPage() {
       </section>
 
       {feedbackMessage && (
-        <p className="rounded-xl bg-[color-mix(in_srgb,var(--highlight)_20%,var(--surface))] px-3 py-2 text-sm text-[var(--deep-accent)]">
+        <p className="rounded-xl bg-[color-mix(in_srgb,var(--highlight)_20%,var(--surface))] px-3 py-2 text-sm text-[var(--deep-accent)] [&+*]:!mt-[10px]">
           {feedbackMessage}
         </p>
       )}
@@ -229,50 +266,37 @@ export function RestaurantDetailPage() {
         ref={reviewsSectionRef}
         className="space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4"
       >
-        <Tabs tabs={detailTabs} activeTab={activeTab} onChange={setActiveTab} />
+        <div className="space-y-4">
+          {showReviewForm && (
+            <ReviewForm
+              onSubmit={handleCreateReview}
+              onCancel={() => setShowReviewForm(false)}
+              rating={quickRating}
+              initialComment={myReview?.comment ?? ''}
+            />
+          )}
 
-        {activeTab === 'overview' && (
-          <div className="space-y-3 text-sm text-[var(--text-secondary)]">
-            <p>{restaurant.description}</p>
-            <p>Explore as avaliações para entender o que a comunidade mais valoriza na experiência.</p>
-            <Button variant="secondary" onClick={() => openReviewsSection()}>
-              Ver reviews
+          {!showReviewForm && (
+            <Button variant="secondary" onClick={() => setShowReviewForm(true)}>
+              Escrever comentário
             </Button>
-          </div>
-        )}
+          )}
 
-        {activeTab === 'reviews' && (
-          <div className="space-y-4">
-            {showReviewForm && (
-              <ReviewForm
-                onSubmit={handleCreateReview}
-                onCancel={() => setShowReviewForm(false)}
-                initialRating={4}
-              />
-            )}
+          {writtenReviews.length === 0 && (
+            <EmptyState
+              title="Sem reviews escritos ainda"
+              description="As notas por estrelas aparecem na média; comentários escritos aparecem aqui."
+            />
+          )}
 
-            {!showReviewForm && (
-              <Button variant="secondary" onClick={() => setShowReviewForm(true)}>
-                Escrever avaliação
-              </Button>
-            )}
-
-            {reviews.length === 0 && (
-              <EmptyState
-                title="Sem reviews ainda"
-                description="Seja o primeiro a compartilhar sua experiência neste restaurante."
-              />
-            )}
-
-            {reviews.length > 0 && (
-              <div className="space-y-3">
-                {reviews.map((review) => (
-                  <ReviewCard key={review.id} review={review} />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+          {writtenReviews.length > 0 && (
+            <div className="space-y-3">
+              {writtenReviews.map((review) => (
+                <ReviewCard key={review.id} review={review} />
+              ))}
+            </div>
+          )}
+        </div>
       </section>
     </div>
   )
