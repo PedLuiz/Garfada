@@ -164,22 +164,6 @@ export function CatalogPage() {
             value: 'Relevância para sua busca',
           },
         ]}
-        action={
-          <div className="w-full max-w-xs rounded-2xl border border-[color-mix(in_srgb,var(--accent)_18%,var(--border))] bg-[color-mix(in_srgb,var(--surface)_84%,white_16%)] p-3 lg:w-auto">
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-secondary)]">Atalho</p>
-            <p className="mt-1 text-sm text-[var(--text-primary)]">
-              Ajustou demais a busca? Volte ao estado inicial com um clique.
-            </p>
-            <Button
-              variant="secondary"
-              size="sm"
-              className="mt-3 w-full border-[color-mix(in_srgb,var(--accent)_20%,var(--border))] bg-[var(--surface)]"
-              onClick={resetFilters}
-            >
-              Redefinir catálogo
-            </Button>
-          </div>
-        }
       />
 
       <RestaurantFilters
