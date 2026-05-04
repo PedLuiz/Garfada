@@ -1,16 +1,19 @@
 import { cn } from '../../utils/cn'
 
 export function PageHeading({ title, description, action, variant = 'catalog', eyebrow, meta = [] }) {
+  const sharedGradientShell =
+    'relative isolate overflow-hidden rounded-[2.2rem] border border-[#f0cba9] bg-gradient-to-br from-[#fffaf4] via-[#ffffff] to-[#ffe6cc] shadow-[0_22px_65px_rgba(181,96,38,0.16)]'
+
   if (variant === 'catalog') {
     return (
-      <section className="relative isolate mb-6 overflow-hidden rounded-[1.75rem] border border-[color-mix(in_srgb,var(--accent)_22%,var(--border))] bg-[linear-gradient(135deg,color-mix(in_srgb,var(--accent)_12%,var(--surface))_0%,var(--surface)_46%,color-mix(in_srgb,var(--primary)_12%,var(--surface))_100%)] p-5 shadow-sm shadow-black/5 lg:p-7">
+      <section className={cn(sharedGradientShell, 'mb-6 p-5 lg:p-7')}>
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-16 -top-16 size-44 rounded-full bg-[color-mix(in_srgb,var(--primary)_28%,transparent)] blur-2xl"
+          className="pointer-events-none absolute -left-24 bottom-16 size-64 rounded-full bg-[#ffd8ad]/60 blur-3xl"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-12 left-10 h-32 w-56 rounded-full bg-[color-mix(in_srgb,var(--accent)_24%,transparent)] blur-2xl"
+          className="pointer-events-none absolute -right-20 -top-16 size-72 rounded-full bg-[#f7bc73]/45 blur-3xl"
         />
 
         <div className="relative flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
@@ -50,12 +53,23 @@ export function PageHeading({ title, description, action, variant = 'catalog', e
   }
 
   return (
-    <section className="mb-5 flex flex-col gap-3 lg:mb-6 lg:flex-row lg:items-end lg:justify-between">
-      <div>
-        <h1 className="font-display text-3xl font-semibold text-[var(--text-primary)] lg:text-4xl">{title}</h1>
-        {description && <p className="mt-2 text-sm text-[var(--text-secondary)] lg:text-base">{description}</p>}
+    <section className={cn(sharedGradientShell, 'mb-5 p-5 lg:mb-6 lg:p-7')}>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-24 bottom-16 size-64 rounded-full bg-[#ffd8ad]/60 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-20 -top-16 size-72 rounded-full bg-[#f7bc73]/45 blur-3xl"
+      />
+
+      <div className="relative flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <h1 className="font-display text-3xl font-semibold text-[var(--text-primary)] lg:text-4xl">{title}</h1>
+          {description && <p className="mt-2 text-sm text-[var(--text-secondary)] lg:text-base">{description}</p>}
+        </div>
+        {action}
       </div>
-      {action}
     </section>
   )
 }
