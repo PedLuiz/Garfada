@@ -147,23 +147,6 @@ export function CatalogPage() {
         description="Descubra restaurantes por localização, cozinha, faixa de preço e avaliação média da comunidade. Pensado para comparar opções com clareza e rapidez."
         variant="catalog"
         eyebrow="Descoberta Gastronômica"
-        meta={[
-          {
-            label: 'Filtros ativos',
-            value: `${activeFiltersCount} aplicado${activeFiltersCount === 1 ? '' : 's'}`,
-          },
-          {
-            label: 'Resultado atual',
-            value:
-              loading && !data
-                ? 'Carregando catálogo...'
-                : `${data?.restaurants.length ?? 0} restaurante${(data?.restaurants.length ?? 0) === 1 ? '' : 's'}`,
-          },
-          {
-            label: 'Ordenação',
-            value: 'Relevância para sua busca',
-          },
-        ]}
       />
 
       <RestaurantFilters
