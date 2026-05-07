@@ -60,7 +60,7 @@ export const restaurantsSeed = [
     description: 'Clássicos mineiros com releitura moderna e ingredientes locais.',
     address: 'Rua dos Sabores, 214 - Savassi, Belo Horizonte',
     photos: [
-      'https://images.pexels.com/photos/6267/restaurant-people-alcohol-bar.jpg?cs=srgb&dl=pexels-pixabay-6267.jpg&fm=jpg',
+      'https://images.pexels.com/photos/5865153/pexels-photo-5865153.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&q=80&w=1600',
       'https://images.pexels.com/photos/10875184/pexels-photo-10875184.jpeg?cs=srgb&dl=pexels-quang-nguyen-vinh-222549-10875184.jpg&fm=jpg',
       'https://images.pexels.com/photos/18014528/pexels-photo-18014528.jpeg?cs=srgb&dl=pexels-huy-nguy%E1%BB%85n-3896554-18014528.jpg&fm=jpg',
     ],

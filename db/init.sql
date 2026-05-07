@@ -312,7 +312,7 @@ FROM (
 JOIN cuisines c ON c.name = r.cuisine_name;
 
 INSERT INTO restaurant_photos (restaurant_id, photo_url, sort_order) VALUES
-  ('r1', 'https://images.pexels.com/photos/6267/restaurant-people-alcohol-bar.jpg?cs=srgb&dl=pexels-pixabay-6267.jpg&fm=jpg', 1),
+  ('r1', 'https://images.pexels.com/photos/5865153/pexels-photo-5865153.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&q=80&w=1600', 1),
   ('r1', 'https://images.pexels.com/photos/10875184/pexels-photo-10875184.jpeg?cs=srgb&dl=pexels-quang-nguyen-vinh-222549-10875184.jpg&fm=jpg', 2),
   ('r1', 'https://images.pexels.com/photos/18014528/pexels-photo-18014528.jpeg?cs=srgb&dl=pexels-huy-nguy%E1%BB%85n-3896554-18014528.jpg&fm=jpg', 3),
   ('r2', 'https://images.pexels.com/photos/14076428/pexels-photo-14076428.jpeg?cs=srgb&dl=pexels-chan-walrus-9418648-14076428.jpg&fm=jpg', 1),
