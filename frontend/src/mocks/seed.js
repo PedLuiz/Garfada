@@ -60,9 +60,9 @@ export const restaurantsSeed = [
     description: 'Clássicos mineiros com releitura moderna e ingredientes locais.',
     address: 'Rua dos Sabores, 214 - Savassi, Belo Horizonte',
     photos: [
-      'https://picsum.photos/seed/garfada-r1-1/1200/800',
-      'https://picsum.photos/seed/garfada-r1-2/1200/800',
-      'https://picsum.photos/seed/garfada-r1-3/1200/800',
+      'https://images.pexels.com/photos/6267/restaurant-people-alcohol-bar.jpg?cs=srgb&dl=pexels-pixabay-6267.jpg&fm=jpg',
+      'https://images.pexels.com/photos/10875184/pexels-photo-10875184.jpeg?cs=srgb&dl=pexels-quang-nguyen-vinh-222549-10875184.jpg&fm=jpg',
+      'https://images.pexels.com/photos/18014528/pexels-photo-18014528.jpeg?cs=srgb&dl=pexels-huy-nguy%E1%BB%85n-3896554-18014528.jpg&fm=jpg',
     ],
     menuPreview: [
       { item: 'Frango com quiabo braseado', price: 'R$ 62' },
@@ -78,9 +78,9 @@ export const restaurantsSeed = [
     description: 'Combinados sazonais, cozinha quente e balcão omakase.',
     address: 'Av. do Oriente, 98 - Funcionários, Belo Horizonte',
     photos: [
-      'https://picsum.photos/seed/garfada-r2-1/1200/800',
-      'https://picsum.photos/seed/garfada-r2-2/1200/800',
-      'https://picsum.photos/seed/garfada-r2-3/1200/800',
+      'https://images.pexels.com/photos/14076428/pexels-photo-14076428.jpeg?cs=srgb&dl=pexels-chan-walrus-9418648-14076428.jpg&fm=jpg',
+      'https://images.pexels.com/photos/12088122/pexels-photo-12088122.jpeg?cs=srgb&dl=pexels-cottonbro-12088122.jpg&fm=jpg',
+      'https://images.pexels.com/photos/20184678/pexels-photo-20184678.jpeg?cs=srgb&dl=pexels-hardeep-johar-105894-20184678.jpg&fm=jpg',
     ],
     menuPreview: [
       { item: 'Omakase 8 tempos', price: 'R$ 198' },
@@ -96,9 +96,9 @@ export const restaurantsSeed = [
     description: 'Massas frescas e pizzas napolitanas fermentadas naturalmente.',
     address: 'Alameda da Vila, 77 - Lourdes, Belo Horizonte',
     photos: [
-      'https://picsum.photos/seed/garfada-r3-1/1200/800',
-      'https://picsum.photos/seed/garfada-r3-2/1200/800',
-      'https://picsum.photos/seed/garfada-r3-3/1200/800',
+      'https://images.pexels.com/photos/776538/pexels-photo-776538.jpeg?cs=srgb&dl=pexels-rachel-claire-776538.jpg&fm=jpg',
+      'https://images.pexels.com/photos/30119014/pexels-photo-30119014.jpeg?cs=srgb&dl=pexels-javon-swaby-1976167-30119014.jpg&fm=jpg',
+      'https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?cs=srgb&dl=pexels-nerfee-mirandilla-1650246-3887985.jpg&fm=jpg',
     ],
     menuPreview: [
       { item: 'Tagliatelle al ragù', price: 'R$ 66' },
@@ -114,9 +114,9 @@ export const restaurantsSeed = [
     description: 'Ceviches autorais, frutos do mar frescos e coquetelaria cítrica.',
     address: 'Rua Atlântica, 301 - Belvedere, Belo Horizonte',
     photos: [
-      'https://picsum.photos/seed/garfada-r4-1/1200/800',
-      'https://picsum.photos/seed/garfada-r4-2/1200/800',
-      'https://picsum.photos/seed/garfada-r4-3/1200/800',
+      'https://images.pexels.com/photos/20184683/pexels-photo-20184683.jpeg?cs=srgb&dl=pexels-hardeep-johar-105894-20184683.jpg&fm=jpg',
+      'https://images.pexels.com/photos/20184670/pexels-photo-20184670.jpeg?cs=srgb&dl=pexels-hardeep-johar-105894-20184670.jpg&fm=jpg',
+      'https://images.pexels.com/photos/20184679/pexels-photo-20184679.jpeg?cs=srgb&dl=pexels-hardeep-johar-105894-20184679.jpg&fm=jpg',
     ],
     menuPreview: [
       { item: 'Ceviche clássico limão-siciliano', price: 'R$ 74' },
@@ -132,9 +132,9 @@ export const restaurantsSeed = [
     description: 'Carnes defumadas de longa cocção e acompanhamentos brasileiros.',
     address: 'Rua da Brasa, 451 - Prado, Belo Horizonte',
     photos: [
-      'https://picsum.photos/seed/garfada-r5-1/1200/800',
-      'https://picsum.photos/seed/garfada-r5-2/1200/800',
-      'https://picsum.photos/seed/garfada-r5-3/1200/800',
+      'https://images.pexels.com/photos/30691575/pexels-photo-30691575.jpeg?cs=srgb&dl=pexels-phit-29015188-30691575.jpg&fm=jpg',
+      'https://images.pexels.com/photos/7590623/pexels-photo-7590623.jpeg?cs=srgb&dl=pexels-%D0%B5%D0%BA%D0%B0%D1%82%D0%B5%D1%80%D0%B8%D0%BD%D0%B0-%D0%B1%D0%BE%D0%BB%D0%BE%D0%B2%D1%86%D0%BE%D0%B2%D0%B0-7309328-7590623.jpg&fm=jpg',
+      'https://images.pexels.com/photos/1846416/pexels-photo-1846416.jpeg?cs=srgb&dl=pexels-skinnyms-1846416.jpg&fm=jpg',
     ],
     menuPreview: [
       { item: 'Brisket defumado (300g)', price: 'R$ 88' },
@@ -150,9 +150,9 @@ export const restaurantsSeed = [
     description: 'Pratos vegetais sazonais e fermentações artesanais.',
     address: 'Rua dos Ipês, 65 - Floresta, Belo Horizonte',
     photos: [
-      'https://picsum.photos/seed/garfada-r6-1/1200/800',
-      'https://picsum.photos/seed/garfada-r6-2/1200/800',
-      'https://picsum.photos/seed/garfada-r6-3/1200/800',
+      'https://images.pexels.com/photos/10045883/pexels-photo-10045883.jpeg?cs=srgb&dl=pexels-rachel-claire-6126316-10045883.jpg&fm=jpg',
+      'https://images.pexels.com/photos/10187175/pexels-photo-10187175.jpeg?cs=srgb&dl=pexels-%D0%B0%D1%80%D1%82%D0%B5%D0%BC-%D0%B2%D0%B0%D0%BB%D0%B8%D0%BD%D1%81%D0%BA%D0%B8%D0%B9-10187175.jpg&fm=jpg',
+      'https://images.pexels.com/photos/34429975/pexels-photo-34429975.jpeg?cs=srgb&dl=pexels-steve-5048917-34429975.jpg&fm=jpg',
     ],
     menuPreview: [
       { item: 'Nhoque de mandioquinha com pesto', price: 'R$ 58' },
@@ -168,9 +168,9 @@ export const restaurantsSeed = [
     description: 'Curries regionais, forno tandoor e especiarias moídas na casa.',
     address: 'Av. das Especiarias, 142 - Santa Efigênia, Belo Horizonte',
     photos: [
-      'https://picsum.photos/seed/garfada-r7-1/1200/800',
-      'https://picsum.photos/seed/garfada-r7-2/1200/800',
-      'https://picsum.photos/seed/garfada-r7-3/1200/800',
+      'https://images.pexels.com/photos/19615767/pexels-photo-19615767.jpeg?cs=srgb&dl=pexels-sagui-andrea-200115552-19615767.jpg&fm=jpg',
+      'https://images.pexels.com/photos/2174069/pexels-photo-2174069.jpeg?cs=srgb&dl=pexels-quark-studio-1159039-2174069.jpg&fm=jpg',
+      'https://images.pexels.com/photos/1123259/pexels-photo-1123259.jpeg?cs=srgb&dl=pexels-valeria-boltneva-1123259.jpg&fm=jpg',
     ],
     menuPreview: [
       { item: 'Butter chicken', price: 'R$ 64' },
@@ -186,9 +186,9 @@ export const restaurantsSeed = [
     description: 'Bistrô francês com brunch estendido e carta de vinhos naturais.',
     address: 'Rua Lumière, 11 - Santo Antônio, Belo Horizonte',
     photos: [
-      'https://picsum.photos/seed/garfada-r8-1/1200/800',
-      'https://picsum.photos/seed/garfada-r8-2/1200/800',
-      'https://picsum.photos/seed/garfada-r8-3/1200/800',
+      'https://images.pexels.com/photos/20184678/pexels-photo-20184678.jpeg?cs=srgb&dl=pexels-hardeep-johar-105894-20184678.jpg&fm=jpg',
+      'https://images.pexels.com/photos/776538/pexels-photo-776538.jpeg?cs=srgb&dl=pexels-rachel-claire-776538.jpg&fm=jpg',
+      'https://images.pexels.com/photos/20184683/pexels-photo-20184683.jpeg?cs=srgb&dl=pexels-hardeep-johar-105894-20184683.jpg&fm=jpg',
     ],
     menuPreview: [
       { item: 'Croque monsieur trufado', price: 'R$ 70' },

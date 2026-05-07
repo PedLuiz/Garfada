@@ -3,6 +3,7 @@ import { PageHeading } from '../components/common/PageHeading'
 import { RestaurantCard } from '../components/common/RestaurantCard'
 import { RestaurantCardSkeleton } from '../components/common/RestaurantCardSkeleton'
 import { RestaurantFilters } from '../components/common/RestaurantFilters'
+import { Button } from '../components/ui/Button'
 import { EmptyState } from '../components/ui/EmptyState'
 import { ErrorState } from '../components/ui/ErrorState'
 import { useAuth } from '../hooks/useAuth'
@@ -73,6 +74,28 @@ export function CatalogPage() {
     setFilters(defaultFilters)
   }
 
+  const activeFiltersCount = useMemo(() => {
+    let count = 0
+
+    if (filters.search.trim()) {
+      count += 1
+    }
+    if (filters.location.trim()) {
+      count += 1
+    }
+    if (filters.cuisine !== 'all') {
+      count += 1
+    }
+    if (filters.priceRange !== 'all') {
+      count += 1
+    }
+    if (filters.minRating !== '0') {
+      count += 1
+    }
+
+    return count
+  }, [filters])
+
   async function handleToggleWishlist(restaurantId) {
     const result = await restaurantService.toggleWishlist(restaurantId)
 
@@ -118,25 +141,49 @@ export function CatalogPage() {
   }
 
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeading
         title="Catálogo"
-        description="Descubra restaurantes por localização, cozinha, faixa de preço e avaliação média da comunidade."
+        description="Descubra restaurantes por localização, cozinha, faixa de preço e avaliação média da comunidade. Pensado para comparar opções com clareza e rapidez."
+        variant="catalog"
+        eyebrow="Descoberta Gastronômica"
       />
 
-      <RestaurantFilters filters={filters} onChange={updateFilter} />
+      <RestaurantFilters
+        filters={filters}
+        onChange={updateFilter}
+        variant="catalog"
+        onReset={resetFilters}
+        activeFiltersCount={activeFiltersCount}
+      />
 
       {feedbackMessage && (
-        <p className="mt-3 rounded-xl bg-[color-mix(in_srgb,var(--highlight)_20%,var(--surface))] px-3 py-2 text-sm text-[var(--deep-accent)]">
+        <p className="rounded-2xl border border-[color-mix(in_srgb,var(--highlight)_36%,var(--border))] bg-[color-mix(in_srgb,var(--highlight)_22%,var(--surface))] px-3 py-2 text-sm text-[var(--deep-accent)]">
           {feedbackMessage}
         </p>
       )}
 
-      <section className="mt-5">
+      <section className="rounded-[1.4rem] border border-[color-mix(in_srgb,var(--accent)_14%,var(--border))] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--surface)_90%,white_10%)_0%,var(--surface)_100%)] p-4 shadow-sm shadow-black/5 lg:p-5">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3 border-b border-[color-mix(in_srgb,var(--accent)_12%,var(--border))] pb-3">
+          <div>
+            <h2 className="font-display text-2xl text-[var(--text-primary)]">Resultados</h2>
+            <p className="text-sm text-[var(--text-secondary)]">
+              {loading
+                ? 'Atualizando recomendações com base nos filtros...'
+                : 'Compare os restaurantes e salve os que combinam com seu momento.'}
+            </p>
+          </div>
+          {!loading && !error && data && (
+            <p className="rounded-full border border-[color-mix(in_srgb,var(--accent)_18%,var(--border))] bg-[color-mix(in_srgb,var(--accent)_8%,var(--surface))] px-3 py-1 text-xs font-semibold text-[var(--accent)]">
+              {data.restaurants.length} {data.restaurants.length === 1 ? 'opção' : 'opções'}
+            </p>
+          )}
+        </div>
+
         {error && <ErrorState message={error.message} onRetry={reload} />}
 
         {!error && loading && (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: 6 }, (_, index) => (
               <RestaurantCardSkeleton key={index} />
             ))}
@@ -153,7 +200,7 @@ export function CatalogPage() {
         )}
 
         {!error && !loading && data && data.restaurants.length > 0 && (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {data.restaurants.map((restaurant) => (
               <RestaurantCard
                 key={restaurant.id}
@@ -162,6 +209,7 @@ export function CatalogPage() {
                 isVisited={data.visitedIds.includes(restaurant.id)}
                 onToggleWishlist={handleToggleWishlist}
                 onToggleVisited={handleToggleVisited}
+                variant="catalog"
               />
             ))}
           </div>
