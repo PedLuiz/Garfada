@@ -108,8 +108,10 @@ export function RegisterPage() {
       imageAlt="Prato gourmet em mesa de restaurante"
       panelBadge="Bem-vindo ao Garfada"
       imageTitle="Transforme cada refeição em descoberta"
+      imageTitleClassName="text-white"
       imageDescription="Crie sua conta para registrar experiências, seguir pessoas com gosto parecido e salvar seus próximos restaurantes."
       panelPills={['Perfil gastronômico', 'Feed da comunidade', 'Histórico de visitas']}
+      panelTextClassName="text-white"
     >
       <h1 className="font-display text-3xl text-[#2f180d] sm:text-4xl">Criar conta no Garfada</h1>
       <p className="mt-2 max-w-md text-sm text-[#6f3d26] sm:text-base">

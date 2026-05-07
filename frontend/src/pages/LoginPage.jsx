@@ -69,7 +69,9 @@ export function LoginPage() {
       imageSrc={loginRestaurantImage}
       imageAlt="Ambiente elegante de restaurante ao entardecer"
       imageTitle="Bem-vindo de volta"
+      imageTitleClassName="text-white"
       panelCompact
+      panelTextClassName="text-white"
     >
       <h1 className="font-display text-3xl text-[#2f180d] sm:text-4xl">Entrar</h1>
       <p className="mt-2 max-w-md text-sm text-[#6f3d26] sm:text-base">

@@ -3,6 +3,7 @@ import { formatPriceRange } from '../../utils/format'
 import { Badge } from '../ui/Badge'
 import { Button } from '../ui/Button'
 import { cn } from '../../utils/cn'
+import { getOptimizedImageUrl } from '../../utils/imageUrl'
 
 export function RestaurantCard({
   restaurant,
@@ -25,10 +26,11 @@ export function RestaurantCard({
           className="relative z-20 block h-[17.5rem] overflow-hidden md:absolute md:inset-0 md:h-full md:transition-transform md:duration-300 md:ease-out md:group-hover:-translate-y-[10.25rem] md:group-focus-within:-translate-y-[10.25rem]"
         >
           <img
-            src={restaurant.photos[0]}
+            src={getOptimizedImageUrl(restaurant.photos[0], { width: 900, height: 1200 })}
             alt={`Foto do restaurante ${restaurant.name}`}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
+            decoding="async"
           />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/68 via-black/24 to-black/10" />
 
@@ -78,10 +80,11 @@ export function RestaurantCard({
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-sm shadow-black/5 transition hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/10">
       <Link to={`/restaurantes/${restaurant.id}`} className="block">
         <img
-          src={restaurant.photos[0]}
+          src={getOptimizedImageUrl(restaurant.photos[0], { width: 720, height: 440 })}
           alt={`Foto do restaurante ${restaurant.name}`}
           className="h-44 w-full object-cover"
           loading="lazy"
+          decoding="async"
         />
       </Link>
 
