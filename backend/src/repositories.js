@@ -2,6 +2,7 @@ const db = require('./db')
 const { AppError, isUniqueViolation } = require('./errors')
 const { createId } = require('./utils/ids')
 
+// Trecho SQL reutilizado para devolver as cozinhas favoritas como array JSON.
 const FAVORITE_CUISINES_SQL = `
 COALESCE(
   (
@@ -14,6 +15,8 @@ COALESCE(
 )
 `
 
+// Trecho SQL reutilizado para montar o contrato completo de restaurante.
+// Isso evita repetir no JavaScript a agregacao de fotos, menu e estatisticas.
 const RESTAURANT_JSON_SQL = `
 json_build_object(
   'id', r.id,
@@ -53,10 +56,12 @@ json_build_object(
 )
 `
 
+// Permite que as funcoes usem tanto o pool global quanto um client de transacao.
 function resolveExecutor(executor) {
   return executor || db
 }
 
+// Usada antes de inserir review/wishlist/visited para retornar 404 claro.
 async function ensureRestaurantExists(restaurantId, executor) {
   const queryExecutor = resolveExecutor(executor)
   const { rowCount } = await queryExecutor.query(
@@ -71,6 +76,7 @@ async function ensureRestaurantExists(restaurantId, executor) {
   }
 }
 
+// Usada em perfis e follows para evitar operar sobre usuarios inexistentes.
 async function ensureUserExists(userId, executor) {
   const queryExecutor = resolveExecutor(executor)
   const { rowCount } = await queryExecutor.query(
@@ -85,6 +91,7 @@ async function ensureUserExists(userId, executor) {
   }
 }
 
+// Remove valores invalidos, espacos e duplicatas sem diferenciar maiusculas.
 function sanitizeCuisineNames(cuisines = []) {
   const uniqueByLower = new Map()
 
@@ -109,10 +116,13 @@ function sanitizeCuisineNames(cuisines = []) {
   return [...uniqueByLower.values()]
 }
 
+// Descobre, a partir do erro do Postgres, se a duplicidade foi no email ou username.
+// Isso e util quando o nome exato da constraint muda entre ambientes/migracoes.
 function inferUserUniqueViolationField(error) {
   const detail = typeof error?.detail === 'string' ? error.detail.toLowerCase() : ''
   const constraint = typeof error?.constraint === 'string' ? error.constraint.toLowerCase() : ''
 
+  // O Postgres costuma informar o campo duplicado no detail ou no nome da constraint.
   if (detail.includes('(email)') || constraint.includes('email')) {
     return 'email'
   }
@@ -124,6 +134,8 @@ function inferUserUniqueViolationField(error) {
   return null
 }
 
+// Converte violacoes de unicidade de usuario em mensagens HTTP amigaveis.
+// Assim o frontend recebe 409 Conflict com uma mensagem especifica.
 function throwUserUniqueViolation(error) {
   const field = inferUserUniqueViolationField(error)
 
@@ -138,6 +150,9 @@ function throwUserUniqueViolation(error) {
   throw new AppError('E-mail ou username já está em uso.', 409)
 }
 
+
+// Sincroniza a lista inteira de cozinhas favoritas do usuario.
+// Primeiro remove os vinculos antigos, depois cria cozinhas novas se necessario.
 async function syncFavoriteCuisines(userId, cuisines, executor) {
   const queryExecutor = resolveExecutor(executor)
   const names = sanitizeCuisineNames(cuisines)
@@ -238,6 +253,7 @@ async function findUserForAuthByIdentifier(identifier, executor) {
 async function createUser({ name, email, username, passwordHash, avatarUrl, bio }) {
   return db.transaction(async (client) => {
     try {
+      // O cadastro e atomico: se qualquer insercao falhar, a transacao volta.
       const userId = createId('u')
 
       await client.query(
@@ -324,6 +340,7 @@ async function getUserProfileById(targetUserId, viewerUserId, executor) {
 
 async function updateMeProfile(userId, payload) {
   return db.transaction(async (client) => {
+    // Monta o UPDATE dinamicamente para alterar apenas os campos enviados.
     const assignments = []
     const values = []
     let index = 1
@@ -380,6 +397,7 @@ async function updateMeProfile(userId, payload) {
     }
 
     if (payload.favoriteCuisines !== undefined) {
+      // Cozinhas favoritas ficam em tabela de relacionamento, por isso sao sincronizadas a parte.
       await syncFavoriteCuisines(userId, payload.favoriteCuisines, client)
     }
 
@@ -389,6 +407,7 @@ async function updateMeProfile(userId, payload) {
 
 async function listRestaurants(filters = {}, executor) {
   const queryExecutor = resolveExecutor(executor)
+  // Conditions e values crescem juntos para manter a query parametrizada.
   const conditions = []
   const values = []
 
@@ -399,6 +418,7 @@ async function listRestaurants(filters = {}, executor) {
   const minRating = Number(filters.minRating ?? 0)
 
   if (search) {
+    // Busca textual simples em nome, descricao e endereco.
     values.push(`%${search}%`)
     const searchNameParam = `$${values.length}`
     values.push(`%${search}%`)
@@ -432,6 +452,7 @@ async function listRestaurants(filters = {}, executor) {
   }
 
   const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : ''
+  // O Postgres ja devolve cada restaurante no formato esperado pelo frontend.
   const { rows } = await queryExecutor.query(
     `SELECT ${RESTAURANT_JSON_SQL} AS restaurant
      FROM restaurants r
@@ -516,6 +537,7 @@ async function listReviewsByUser(userId, executor) {
 }
 
 async function createFeedEvent(client, payload) {
+  // Eventos alimentam o feed social depois de reviews, visitas, wishlist e follows.
   await client.query(
     `INSERT INTO feed_events (
       id,
@@ -540,6 +562,7 @@ async function upsertReview({ userId, restaurantId, rating, comment }) {
   return db.transaction(async (client) => {
     await ensureRestaurantExists(restaurantId, client)
 
+    // A constraint (user_id, restaurant_id) garante uma unica review por usuario/restaurante.
     const reviewId = createId('rev')
     const { rows } = await client.query(
       `INSERT INTO reviews (
@@ -568,6 +591,7 @@ async function upsertReview({ userId, restaurantId, rating, comment }) {
 
     const review = rows[0]
 
+    // Mesmo quando uma review e atualizada, registramos um novo evento no feed.
     await createFeedEvent(client, {
       type: 'review',
       userId,
@@ -604,6 +628,7 @@ async function addWishlistItem(userId, restaurantId) {
     await ensureRestaurantExists(restaurantId, client)
 
     try {
+      // A chave primaria impede que o mesmo restaurante seja salvo duas vezes.
       const insertResult = await client.query(
         `INSERT INTO wishlist_items (user_id, restaurant_id, added_at)
          VALUES ($1, $2, NOW())
@@ -671,6 +696,7 @@ async function addVisitedItem(userId, restaurantId, userRating) {
     await ensureRestaurantExists(restaurantId, client)
 
     try {
+      // Visitados tambem usam chave primaria composta: um usuario marca cada restaurante uma vez.
       const insertResult = await client.query(
         `INSERT INTO visited_restaurants (user_id, restaurant_id, visited_at, user_rating)
          VALUES ($1, $2, NOW(), $3)
@@ -734,6 +760,7 @@ async function followUser(followerUserId, followedUserId) {
     await ensureUserExists(followedUserId, client)
 
     try {
+      // O banco tambem protege contra follow duplicado e auto-follow.
       await client.query(
         `INSERT INTO user_follows (follower_user_id, followed_user_id, created_at)
          VALUES ($1, $2, NOW())`,
@@ -790,6 +817,7 @@ async function searchUsers(viewerUserId, query = '', executor) {
   const likeValue = `%${trimmedQuery}%`
 
   const { rows } = await queryExecutor.query(
+    // Exclui o proprio usuario e devolve se o viewer ja segue cada resultado.
     `SELECT
       u.id,
       u.name,
@@ -824,6 +852,7 @@ async function searchUsers(viewerUserId, query = '', executor) {
 
 async function listFeed(executor) {
   const queryExecutor = resolveExecutor(executor)
+  // O feed agrega dados opcionais conforme o tipo do evento.
   const { rows } = await queryExecutor.query(
     `SELECT
       fe.id,
@@ -886,6 +915,7 @@ async function getUserCollections(userId, executor) {
   const queryExecutor = resolveExecutor(executor)
   await ensureUserExists(userId, queryExecutor)
 
+  // Reviews, wishlist e visitados sao independentes; podem ser buscados em paralelo.
   const [reviews, wishlist, visited] = await Promise.all([
     listReviewsByUser(userId, queryExecutor),
     listWishlistByUser(userId, queryExecutor),
