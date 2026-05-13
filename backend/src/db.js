@@ -1,5 +1,7 @@
 const { Pool } = require('pg')
 
+// Configuracao padrao para desenvolvimento local; variaveis de ambiente
+// permitem trocar host, banco e credenciais no Docker ou em producao.
 const poolConfig = {
   host: process.env.PGHOST || 'localhost',
   port: Number(process.env.PGPORT) || 5432,
@@ -12,10 +14,12 @@ const poolConfig = {
 }
 
 if (process.env.DATABASE_URL) {
+  // DATABASE_URL tem prioridade quando a infraestrutura fornece a string completa.
   poolConfig.connectionString = process.env.DATABASE_URL
 }
 
 if (process.env.NODE_ENV === 'production' && process.env.PGSSLMODE === 'require') {
+  // Alguns provedores exigem SSL para conexao com Postgres em producao.
   poolConfig.ssl = { rejectUnauthorized: false }
 }
 
@@ -29,6 +33,7 @@ async function checkConnection() {
   await query('SELECT 1')
 }
 
+// Executa operacoes atomicas: commit quando tudo da certo, rollback em erro.
 async function transaction(handler) {
   const client = await pool.connect()
 

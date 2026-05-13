@@ -11,6 +11,8 @@ const { hashPassword, verifyPassword } = require('./utils/password')
 const app = express()
 const port = Number(process.env.PORT) || 3001
 
+// CORS fica configuravel por ambiente para permitir o frontend local e,
+// em producao, restringir quais origens podem consumir a API.
 const allowedOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
   : true
@@ -18,12 +20,14 @@ const allowedOrigins = process.env.CORS_ORIGIN
 app.use(cors({ origin: allowedOrigins, credentials: true }))
 app.use(express.json())
 
+// Centraliza erros de rotas async sem repetir try/catch em cada endpoint.
 function asyncHandler(handler) {
   return (req, res, next) => {
     Promise.resolve(handler(req, res, next)).catch(next)
   }
 }
 
+// Normaliza campos textuais vindos do cliente antes das validacoes.
 function trimOrEmpty(value) {
   if (typeof value !== 'string') {
     return ''
@@ -32,6 +36,7 @@ function trimOrEmpty(value) {
   return value.trim()
 }
 
+// Login e cadastro devolvem sempre o mesmo contrato: token JWT + usuario.
 function buildSessionResponse(user) {
   return {
     token: signAccessToken(user.id),
@@ -39,6 +44,7 @@ function buildSessionResponse(user) {
   }
 }
 
+// Mantem o PUT /api/me restrito aos campos permitidos e valida cada um deles.
 function sanitizeProfileUpdatePayload(payload) {
   const sanitized = {}
 
@@ -93,6 +99,7 @@ function sanitizeProfileUpdatePayload(payload) {
   return sanitized
 }
 
+// Endpoint de observabilidade para confirmar se API e banco estao respondendo.
 app.get('/health', async (_req, res) => {
   try {
     await db.checkConnection()
@@ -105,6 +112,7 @@ app.get('/health', async (_req, res) => {
 app.post(
   '/api/auth/register',
   asyncHandler(async (req, res) => {
+    // Revalidamos dados obrigatorios no backend para nao depender do frontend.
     const name = trimOrEmpty(req.body?.name)
     const email = trimOrEmpty(req.body?.email)
     const username = trimOrEmpty(req.body?.username)
@@ -126,6 +134,7 @@ app.post(
       throw new AppError('A senha precisa ter ao menos 6 caracteres.', 400)
     }
 
+    // A senha nunca e salva em texto puro: apenas o hash vai para o banco.
     const user = await repositories.createUser({
       name,
       email,
@@ -142,6 +151,7 @@ app.post(
 app.post(
   '/api/auth/login',
   asyncHandler(async (req, res) => {
+    // O identificador aceita email ou username, comparados sem diferenciar maiusculas.
     const identifier = trimOrEmpty(req.body?.identifier)
     const password = trimOrEmpty(req.body?.password)
 
@@ -182,6 +192,7 @@ app.get(
 app.get(
   '/api/restaurants',
   asyncHandler(async (req, res) => {
+    // O repositorio monta uma consulta parametrizada so com os filtros enviados.
     const restaurants = await repositories.listRestaurants({
       search: req.query.search,
       location: req.query.location,
@@ -221,6 +232,7 @@ app.post(
   '/api/restaurants/:id/reviews',
   requireAuth,
   asyncHandler(async (req, res) => {
+    // Cada usuario tem no maximo uma review por restaurante; o repositorio faz upsert.
     const rating = Number(req.body?.rating)
     const comment = typeof req.body?.comment === 'string' ? req.body.comment.trim() : ''
 
@@ -283,6 +295,7 @@ app.post(
   '/api/restaurants/:id/visited',
   requireAuth,
   asyncHandler(async (req, res) => {
+    // userRating e opcional; vazio vira NULL no banco.
     const rawRating = req.body?.userRating
     const userRating = rawRating === undefined || rawRating === null || rawRating === '' ? null : Number(rawRating)
 
@@ -405,6 +418,8 @@ app.use((_req, res) => {
   return res.status(404).json({ message: 'Rota não encontrada.' })
 })
 
+// Resposta de erro padronizada para o frontend.
+// AppError representa falhas esperadas; erros inesperados viram 500 generico.
 app.use((error, _req, res, _next) => {
   if (error instanceof AppError) {
     return res.status(error.statusCode).json({

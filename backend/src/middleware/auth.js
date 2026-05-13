@@ -4,6 +4,7 @@ const { AppError } = require('../errors')
 const JWT_SECRET = process.env.JWT_SECRET || 'garfada-dev-secret'
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d'
 
+// Extrai apenas tokens no formato esperado: Authorization: Bearer <token>.
 function parseBearerToken(authorizationHeader = '') {
   const [scheme, token] = authorizationHeader.split(' ')
 
@@ -14,10 +15,12 @@ function parseBearerToken(authorizationHeader = '') {
   return token
 }
 
+// O id do usuario vai no campo sub, padrao comum para subject em JWT.
 function signAccessToken(userId) {
   return jwt.sign({ sub: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN })
 }
 
+// Middleware usado em rotas privadas. Quando o token e valido, injeta req.auth.
 function requireAuth(req, _res, next) {
   try {
     const token = parseBearerToken(req.headers.authorization)

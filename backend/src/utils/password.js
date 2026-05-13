@@ -4,6 +4,7 @@ const PASSWORD_SCHEME = 'pbkdf2_sha256'
 const DEFAULT_ITERATIONS = Number(process.env.PASSWORD_PBKDF2_ITERATIONS) || 120000
 const KEY_LENGTH = 32
 
+// JWT e hashes ficam mais faceis de transportar quando usam base64url.
 function toBase64Url(buffer) {
   return buffer.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '')
 }
@@ -14,6 +15,8 @@ function fromBase64Url(value) {
   return Buffer.from(padded, 'base64')
 }
 
+// Gera um hash com salt unico por senha. O formato salva esquema, iteracoes,
+// salt e digest para permitir verificacao futura.
 function hashPassword(password) {
   const salt = crypto.randomBytes(12).toString('hex')
   const saltEncoded = Buffer.from(salt, 'utf8').toString('base64')
@@ -22,6 +25,7 @@ function hashPassword(password) {
   return `${PASSWORD_SCHEME}$${DEFAULT_ITERATIONS}$${saltEncoded}$${toBase64Url(digest)}`
 }
 
+// Recalcula o hash com os parametros salvos e compara em tempo constante.
 function verifyPassword(password, encodedHash) {
   if (!encodedHash || typeof encodedHash !== 'string') {
     return false
