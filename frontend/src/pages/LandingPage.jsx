@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import logoGarfada from '../assets/logo-garfada.png'
 import { Button } from '../components/ui/Button'
 
 const highlights = [
@@ -144,8 +145,9 @@ export function LandingPage() {
         <div className="pointer-events-none absolute -right-20 -top-16 size-72 rounded-full bg-[#f7bc73]/45 blur-3xl" />
 
         <nav className="relative flex flex-wrap items-center justify-between gap-4">
-          <Link to="/" className="font-display text-2xl font-semibold tracking-tight text-[#451d0d]">
-            Garfada
+          <Link to="/" className="flex items-center gap-2 font-display text-2xl font-semibold tracking-tight text-[#451d0d]">
+            <img src={logoGarfada} alt="" aria-hidden="true" className="size-10 object-contain" />
+            <span>Garfada</span>
           </Link>
 
           <ul className="hidden items-center gap-7 text-sm font-medium text-[#6c3b24] lg:flex">

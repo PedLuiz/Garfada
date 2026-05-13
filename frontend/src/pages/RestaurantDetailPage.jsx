@@ -9,9 +9,12 @@ import { Button } from '../components/ui/Button'
 import { EmptyState } from '../components/ui/EmptyState'
 import { ErrorState } from '../components/ui/ErrorState'
 import { LoadingState } from '../components/ui/LoadingState'
+import removeIcon from '../assets/remove-icon.png'
+import wishlistIcon from '../assets/wishlist-icon.svg'
 import { useAuth } from '../hooks/useAuth'
 import { useAsyncData } from '../hooks/useAsyncData'
 import { formatPriceRange } from '../utils/format'
+import { getOptimizedImageUrl } from '../utils/imageUrl'
 import { restaurantService } from '../services/restaurantService'
 import { reviewService } from '../services/reviewService'
 
@@ -174,13 +177,23 @@ export function RestaurantDetailPage() {
       <section className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
         <article className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4">
           <img
-            src={restaurant.photos[0]}
+            src={getOptimizedImageUrl(restaurant.photos[0], { width: 1600, height: 900 })}
             alt={`Foto principal de ${restaurant.name}`}
             className="h-72 w-full rounded-xl object-cover"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
           />
           <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {restaurant.photos.slice(1).map((photo) => (
-              <img key={photo} src={photo} alt={`Galeria de ${restaurant.name}`} className="h-24 w-full rounded-xl object-cover" />
+              <img
+                key={photo}
+                src={getOptimizedImageUrl(photo, { width: 360, height: 180 })}
+                alt={`Galeria de ${restaurant.name}`}
+                className="h-24 w-full rounded-xl object-cover"
+                loading="lazy"
+                decoding="async"
+              />
             ))}
           </div>
         </article>
@@ -202,8 +215,19 @@ export function RestaurantDetailPage() {
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
-              <Button variant={isWishlisted ? 'highlight' : 'secondary'} onClick={handleToggleWishlist}>
-                {isWishlisted ? 'Remover da Lista de Desejos' : 'Adicionar à Lista de Desejos'}
+              <Button
+                variant={isWishlisted ? 'highlight' : 'secondary'}
+                onClick={handleToggleWishlist}
+                className="h-11 w-11 p-0"
+                aria-label={isWishlisted ? 'Remover da lista de desejos' : 'Adicionar à lista de desejos'}
+                title={isWishlisted ? 'Remover da lista de desejos' : 'Adicionar à lista de desejos'}
+              >
+                <img
+                  src={isWishlisted ? removeIcon : wishlistIcon}
+                  alt=""
+                  aria-hidden="true"
+                  className="size-5 object-contain"
+                />
               </Button>
               <Button variant={isVisited ? 'primary' : 'secondary'} onClick={handleToggleVisited}>
                 {isVisited ? 'Visitado' : 'Marcar Visitado'}

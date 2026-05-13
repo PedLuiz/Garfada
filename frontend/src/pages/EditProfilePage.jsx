@@ -151,11 +151,8 @@ export function EditProfilePage() {
             <Avatar src={form.avatarUrl} name={form.name || 'Perfil'} size="lg" />
             <div className="space-y-2">
               <Button type="button" variant="secondary" onClick={handleFilePick}>
-                Upload visual (mock)
+                Upload
               </Button>
-              <p className="text-xs text-[var(--text-secondary)]">
-                O upload é apenas visual no frontend. A integração real virá pelo backend.
-              </p>
             </div>
           </div>
 
@@ -182,14 +179,6 @@ export function EditProfilePage() {
           value={form.username}
           onChange={(event) => handleChange('username', event.target.value)}
           error={errors.username}
-        />
-
-        <Input
-          label="URL do avatar"
-          name="avatarUrl"
-          placeholder="https://..."
-          value={form.avatarUrl}
-          onChange={(event) => handleChange('avatarUrl', event.target.value)}
         />
 
         <Textarea

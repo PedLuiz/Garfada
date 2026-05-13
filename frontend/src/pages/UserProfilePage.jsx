@@ -21,7 +21,7 @@ import { userService } from '../services/userService'
 const tabs = [
   { value: 'reviews', label: 'Avaliações' },
   { value: 'visited', label: 'Visitados' },
-  { value: 'wishlist', label: 'Lista pública' },
+  { value: 'wishlist', label: 'Lista de Desejos' },
 ]
 
 export function UserProfilePage() {
@@ -165,7 +165,7 @@ export function UserProfilePage() {
         stats={[
           { label: 'Reviews', value: profile.reviewsCount },
           { label: 'Visitados', value: profile.visitedCount },
-          { label: 'Lista pública', value: profile.wishlistCount },
+          { label: 'Lista de Desejos', value: profile.wishlistCount },
           { label: 'Seguidores', value: profile.followersCount },
           { label: 'Seguindo', value: profile.followingCount },
         ]}

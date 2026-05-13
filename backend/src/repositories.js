@@ -116,6 +116,41 @@ function sanitizeCuisineNames(cuisines = []) {
   return [...uniqueByLower.values()]
 }
 
+// Descobre, a partir do erro do Postgres, se a duplicidade foi no email ou username.
+// Isso e util quando o nome exato da constraint muda entre ambientes/migracoes.
+function inferUserUniqueViolationField(error) {
+  const detail = typeof error?.detail === 'string' ? error.detail.toLowerCase() : ''
+  const constraint = typeof error?.constraint === 'string' ? error.constraint.toLowerCase() : ''
+
+  // O Postgres costuma informar o campo duplicado no detail ou no nome da constraint.
+  if (detail.includes('(email)') || constraint.includes('email')) {
+    return 'email'
+  }
+
+  if (detail.includes('(username)') || constraint.includes('username')) {
+    return 'username'
+  }
+
+  return null
+}
+
+// Converte violacoes de unicidade de usuario em mensagens HTTP amigaveis.
+// Assim o frontend recebe 409 Conflict com uma mensagem especifica.
+function throwUserUniqueViolation(error) {
+  const field = inferUserUniqueViolationField(error)
+
+  if (field === 'email') {
+    throw new AppError('Esse e-mail já está em uso.', 409)
+  }
+
+  if (field === 'username') {
+    throw new AppError('Esse username já foi escolhido por outra pessoa.', 409)
+  }
+
+  throw new AppError('E-mail ou username já está em uso.', 409)
+}
+
+
 // Sincroniza a lista inteira de cozinhas favoritas do usuario.
 // Primeiro remove os vinculos antigos, depois cria cozinhas novas se necessario.
 async function syncFavoriteCuisines(userId, cuisines, executor) {
@@ -236,12 +271,8 @@ async function createUser({ name, email, username, passwordHash, avatarUrl, bio 
 
       return getAuthUserById(userId, client)
     } catch (error) {
-      if (isUniqueViolation(error, 'ux_users_email_ci')) {
-        throw new AppError('Esse e-mail já está em uso.', 409)
-      }
-
-      if (isUniqueViolation(error, 'ux_users_username_ci')) {
-        throw new AppError('Esse username já foi escolhido por outra pessoa.', 409)
+      if (isUniqueViolation(error)) {
+        throwUserUniqueViolation(error)
       }
 
       throw error
@@ -355,12 +386,8 @@ async function updateMeProfile(userId, payload) {
           throw new AppError('Usuário não encontrado.', 404)
         }
       } catch (error) {
-        if (isUniqueViolation(error, 'ux_users_username_ci')) {
-          throw new AppError('Username indisponível no momento.', 409)
-        }
-
-        if (isUniqueViolation(error, 'ux_users_email_ci')) {
-          throw new AppError('Esse e-mail já está em uso.', 409)
+        if (isUniqueViolation(error)) {
+          throwUserUniqueViolation(error)
         }
 
         throw error

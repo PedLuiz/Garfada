@@ -1,5 +1,6 @@
 import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import logoGarfada from '../../assets/logo-garfada.png'
 import { Avatar } from '../ui/Avatar'
 import { Button } from '../ui/Button'
 import { cn } from '../../utils/cn'
@@ -23,8 +24,9 @@ export function AppNavbar() {
     <header className="sticky top-0 z-[100] border-b border-[var(--border)] bg-[color-mix(in_srgb,var(--bg)_90%,white_10%)]/95 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-3 lg:flex-row lg:items-center lg:justify-between lg:px-6">
         <div className="flex items-center justify-between gap-4">
-          <Link to="/catalogo" className="font-display text-xl font-semibold text-[var(--accent)]">
-            Garfada
+          <Link to="/catalogo" className="flex items-center gap-2 font-display text-xl font-semibold text-[var(--accent)]">
+            <img src={logoGarfada} alt="" aria-hidden="true" className="size-9 object-contain" />
+            <span>Garfada</span>
           </Link>
 
           <div className="flex items-center gap-2 lg:hidden">
