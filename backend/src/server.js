@@ -447,6 +447,10 @@ app.use((error, _req, res, _next) => {
   return res.status(500).json(payload)
 })
 
-app.listen(port, () => {
-  console.log(`Backend running on port ${port}`)
-})
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Backend running on port ${port}`)
+  })
+}
+
+module.exports = app
