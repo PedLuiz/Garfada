@@ -1,7 +1,7 @@
 const { authHeader, registerUser, request } = require('../helpers/apiTestUtils')
 
-describe('Social API integration', () => {
-  test('busca usuarios exclui o proprio usuario', async () => {
+describe('Integração da API social', () => {
+  test('busca usuários exclui o próprio usuário', async () => {
     const session = await registerUser({
       name: 'Usuario Busca',
       username: 'usuariobusca',
@@ -20,7 +20,7 @@ describe('Social API integration', () => {
     )
   })
 
-  test('segue, rejeita duplicidade e deixa de seguir usuario', async () => {
+  test('segue, rejeita duplicidade e deixa de seguir usuário', async () => {
     const follower = await registerUser({ username: 'seguidorint' })
     const followed = await registerUser({ username: 'seguidoint' })
 

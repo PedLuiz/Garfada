@@ -1,7 +1,7 @@
 const { authHeader, registerUser, request } = require('../helpers/apiTestUtils')
 
-describe('Reviews and feed API integration', () => {
-  test('cria review, lista no restaurante, atualiza estatisticas e publica no feed', async () => {
+describe('Integração da API de reviews e feed', () => {
+  test('cria review, lista no restaurante, atualiza estatísticas e publica no feed', async () => {
     const session = await registerUser()
 
     const createResponse = await request

@@ -1,7 +1,7 @@
 const { authHeader, registerUser, request } = require('../helpers/apiTestUtils')
 
-describe('Auth API integration', () => {
-  test('cadastro persiste usuario, retorna token e permite login', async () => {
+describe('Integração da API de autenticação', () => {
+  test('cadastro persiste usuário, retorna token e permite login', async () => {
     const session = await registerUser({
       name: 'Maria Integracao',
       email: 'maria.integracao@garfada.test',
@@ -29,7 +29,7 @@ describe('Auth API integration', () => {
     expect(loginResponse.body.user.id).toBe(session.user.id)
   })
 
-  test('GET /api/auth/me exige token bearer valido e retorna usuario autenticado', async () => {
+  test('GET /api/auth/me exige token bearer válido e retorna usuário autenticado', async () => {
     await request.get('/api/auth/me').expect(401)
 
     const session = await registerUser()

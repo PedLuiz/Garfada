@@ -1,6 +1,6 @@
 const { authHeader, registerUser, request } = require('../helpers/apiTestUtils')
 
-describe('Collections API integration', () => {
+describe('Integração da API de coleções', () => {
   test('adiciona, lista e remove item de wishlist', async () => {
     const session = await registerUser()
 

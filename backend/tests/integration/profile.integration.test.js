@@ -1,7 +1,7 @@
 const { authHeader, registerUser, request } = require('../helpers/apiTestUtils')
 
-describe('Profile API integration', () => {
-  test('atualiza perfil e retorna estatisticas e cozinhas favoritas atualizadas', async () => {
+describe('Integração da API de perfil', () => {
+  test('atualiza perfil e retorna estatísticas e cozinhas favoritas atualizadas', async () => {
     const session = await registerUser()
 
     const updateResponse = await request

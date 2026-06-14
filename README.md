@@ -12,6 +12,35 @@ O Garfada é uma plataforma de catálogo e avaliação de restaurantes projetada
 - React + Node.js + PostgreSQL 
 - Codex
 
+## Testes
+
+Backend unitario:
+
+```bash
+cd backend
+npm run test:unit
+npm run test:coverage
+```
+
+Frontend unitario:
+
+```bash
+cd frontend
+npm test
+npm run test:coverage
+```
+
+Integracao backend com PostgreSQL:
+
+```bash
+cd backend
+npm run test:integration
+```
+
+A cobertura minima configurada para backend e frontend e de 70% em statements,
+branches, functions e lines. Para detalhes de execucao via Docker e variaveis
+`TEST_PG*`, consulte `docs/integration-tests.md`.
+
 ## Histórias de usuários
 - Como usuário do sistema, gostaria de filtrar os restaurantes por tipo de cozinha, faixa de preço, para que eu encontre rapidamente um lugar que combine com meu desejo e condição no momento.
 - Como cliente, eu quero poder visualizar as fotos dos ambientes e o cardápio do restaurante, para avaliar se o local é adequado para ocasião.

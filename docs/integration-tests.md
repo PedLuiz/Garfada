@@ -64,15 +64,26 @@ Arquivo: `backend/tests/integration/social.integration.test.js`
 
 ## Como executar
 
+### Backend unitario
+
+Os testes unitarios nao dependem do PostgreSQL. Eles usam mocks/fakes para
+middlewares, repositorios, transacoes e handlers HTTP.
+
+```bash
+cd backend
+npm run test:unit
+npm run test:coverage
+```
+
+O gate de cobertura do backend exige no minimo 70% em statements, branches,
+functions e lines.
+
+### Backend integracao
+
 Na maquina local, a partir de `backend/`:
 
 ```bash
-npm test
-```
-
-ou:
-
-```bash
+cd backend
 npm run test:integration
 ```
 
@@ -80,8 +91,25 @@ Quando os testes forem executados dentro do container backend do Docker Compose,
 
 ```bash
 docker compose cp db/init.sql backend:/tmp/garfada-init.sql
-docker compose exec -e TEST_PGHOST=db -e TEST_INIT_SQL_PATH=/tmp/garfada-init.sql backend npm test
+docker compose exec -e TEST_PGHOST=db -e TEST_INIT_SQL_PATH=/tmp/garfada-init.sql backend npm run test:integration
 ```
+
+Se o banco do container tiver sido criado com senha diferente do fallback
+`postgres`, informe tambem `TEST_PGPASSWORD` com o mesmo valor usado em
+`POSTGRES_PASSWORD`/`PGPASSWORD` no ambiente local.
+
+### Frontend unitario
+
+A partir de `frontend/`:
+
+```bash
+cd frontend
+npm test
+npm run test:coverage
+```
+
+O frontend usa Vitest + jsdom + Testing Library. O gate de cobertura tambem
+exige no minimo 70% em statements, branches, functions e lines.
 
 ## Ultima verificacao registrada
 

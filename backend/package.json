@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "test": "npm run test:integration",
-    "test:integration": "jest --runInBand"
+    "test": "npm run test:unit; npm run test:integration",
+    "test:unit": "jest --config jest.unit.config.cjs --runInBand",
+    "test:integration": "jest --config jest.config.cjs --runInBand",
+    "test:coverage": "jest --config jest.unit.config.cjs --runInBand --coverage"
   },
   "keywords": [],
   "author": "",

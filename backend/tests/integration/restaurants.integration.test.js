@@ -1,7 +1,7 @@
 const { request } = require('../helpers/apiTestUtils')
 
-describe('Restaurants API integration', () => {
-  test('lista restaurantes agregados com fotos, menu e estatisticas', async () => {
+describe('Integração da API de restaurantes', () => {
+  test('lista restaurantes agregados com fotos, menu e estatísticas', async () => {
     const response = await request.get('/api/restaurants').expect(200)
 
     expect(response.body).toHaveLength(8)
@@ -23,7 +23,7 @@ describe('Restaurants API integration', () => {
     )
   })
 
-  test('filtra por busca, cozinha, faixa de preco e nota minima', async () => {
+  test('filtra por busca, cozinha, faixa de preço e nota mínima', async () => {
     const response = await request
       .get('/api/restaurants')
       .query({
