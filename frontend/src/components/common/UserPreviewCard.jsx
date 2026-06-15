@@ -4,7 +4,10 @@ import { Button } from '../ui/Button'
 
 export function UserPreviewCard({ user, onFollow }) {
   return (
-    <article className="flex items-center justify-between gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3">
+    <article
+      data-testid={`user-preview-${user.id}`}
+      className="flex items-center justify-between gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3"
+    >
       <Link to={`/usuarios/${user.id}`} className="flex items-center gap-3">
         <Avatar src={user.avatarUrl} name={user.name} size="sm" />
         <div>

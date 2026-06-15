@@ -39,6 +39,7 @@ export function ReviewForm({ onSubmit, onCancel, rating = 0, initialComment = ''
 
       <Textarea
         label="Comentário"
+        name="comment"
         placeholder="Como foi sua experiência?"
         rows={4}
         value={comment}

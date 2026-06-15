@@ -15,7 +15,7 @@
   --highlight: #f0a202;
   --deep-accent: #581f18;
 
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
 @media (prefers-color-scheme: light) {

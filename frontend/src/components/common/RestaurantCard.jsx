@@ -16,7 +16,10 @@ export function RestaurantCard({
 }) {
   if (variant === 'catalog') {
     return (
-      <article className="group relative overflow-hidden rounded-[1.25rem] border border-[color-mix(in_srgb,var(--accent)_16%,var(--border))] bg-[color-mix(in_srgb,var(--surface)_88%,white_12%)] shadow-lg shadow-black/10 md:h-[26.5rem]">
+      <article
+        data-testid={`restaurant-card-${restaurant.id}`}
+        className="group relative overflow-hidden rounded-[1.25rem] border border-[color-mix(in_srgb,var(--accent)_16%,var(--border))] bg-[color-mix(in_srgb,var(--surface)_88%,white_12%)] shadow-lg shadow-black/10 md:h-[26.5rem]"
+      >
         <div className="pointer-events-none absolute left-0 right-0 top-0 z-30 bg-black/72 px-4 py-2.5 backdrop-blur-[1px]">
           <h3 className="font-display text-xl leading-tight !text-white">{restaurant.name}</h3>
         </div>
@@ -77,7 +80,10 @@ export function RestaurantCard({
   }
 
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-sm shadow-black/5 transition hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/10">
+    <article
+      data-testid={`restaurant-card-${restaurant.id}`}
+      className="flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-sm shadow-black/5 transition hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/10"
+    >
       <Link to={`/restaurantes/${restaurant.id}`} className="block">
         <img
           src={getOptimizedImageUrl(restaurant.photos[0], { width: 720, height: 440 })}

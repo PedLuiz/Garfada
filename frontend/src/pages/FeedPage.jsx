@@ -60,6 +60,7 @@ export function FeedPage() {
           <article className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4">
             <Input
               label="Buscar usuários"
+              name="userSearch"
               placeholder="Digite nome ou @username"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
