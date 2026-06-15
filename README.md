@@ -30,6 +30,23 @@ npm test
 npm run test:coverage
 ```
 
+End-to-end com Playwright:
+
+```bash
+cd frontend
+npm run test:e2e
+```
+
+Os testes E2E sobem uma stack Docker isolada definida em
+`docker-compose.e2e.yml`, com frontend em `http://127.0.0.1:5174`, backend em
+`http://127.0.0.1:3002`, banco `garfada_e2e` e runner Playwright em container.
+Para execução local interativa, use `npm run test:e2e:install` antes de
+`test:e2e:ui` ou `test:e2e:headed`; se o Chromium local reclamar de biblioteca
+ausente, rode `sudo npx playwright install-deps chromium`. Nesses modos
+interativos, o frontend aponta para `http://127.0.0.1:3002`, para que login e
+cadastro funcionem no navegador do host. Para detalhes de cobertura e depuração,
+consulte `docs/e2e-tests-report.md`.
+
 Integracao backend com PostgreSQL:
 
 ```bash
